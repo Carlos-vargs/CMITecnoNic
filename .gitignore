@@ -1,0 +1,73 @@
+# Ignore Visual Studio temporary files, build results, and build logs
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+x64/
+x86/
+[Aa][Nn][Yy][Cc][Pp][Uu]/
+[Aa][Nn][Yy][Cc][Pp][Uu]/.vs/
+*.vs/
+.vs/
+
+# Auto generated VS/MD/Mono files
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+__pycache__/
+.idea/*/
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# VS Code
+.vscode/
+
+# Rider
+.idea/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# IIS
+App_Data/
+
+# Mono auto generated files
+mono_crash.*
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# VS Code
+.vscode/
+.idea/
+
+# Rider
+.idea/
+
+# ASP.NET
+App_Data/
+App_Backup/
+Backup/
+Database/
+fileupload/
+logs/
+node_modules/
+bin/
+obj/

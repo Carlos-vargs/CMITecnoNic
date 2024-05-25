@@ -1,0 +1,57 @@
+﻿@model IEnumerable<CMISentinelPrime.Models.Objective>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Metric)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Weighting)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CMI.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Perspective.Name)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Metric)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Weighting)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CMI.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Perspective.Name)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

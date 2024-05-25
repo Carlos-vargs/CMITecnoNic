@@ -1,0 +1,58 @@
+﻿@model CMISentinelPrime.Models.Objective
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Objective</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Metric)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Metric)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Weighting)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Weighting)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CMI.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CMI.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Perspective.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Perspective.Name)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

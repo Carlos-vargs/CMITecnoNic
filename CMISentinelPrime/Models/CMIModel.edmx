@@ -1,0 +1,458 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CMIModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="CMIModelStoreContainer">
+    <EntitySet Name="CMISet" EntityType="CMIModel.Store.CMISet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ObjectiveSet" EntityType="CMIModel.Store.ObjectiveSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="PerspectiveSet" EntityType="CMIModel.Store.PerspectiveSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="IndicatorSet" EntityType="CMIModel.Store.IndicatorSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="MetricTypeSet" EntityType="CMIModel.Store.MetricTypeSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DataIndicatorSet" EntityType="CMIModel.Store.DataIndicatorSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TargetSet" EntityType="CMIModel.Store.TargetSet" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="CMIObjective" Association="CMIModel.Store.CMIObjective">
+      <End Role="CMI" EntitySet="CMISet" />
+      <End Role="Objective" EntitySet="ObjectiveSet" />
+    </AssociationSet>
+    <AssociationSet Name="PerspectiveObjective" Association="CMIModel.Store.PerspectiveObjective">
+      <End Role="Perspective" EntitySet="PerspectiveSet" />
+      <End Role="Objective" EntitySet="ObjectiveSet" />
+    </AssociationSet>
+    <AssociationSet Name="ObjectiveIndicator" Association="CMIModel.Store.ObjectiveIndicator">
+      <End Role="Objective" EntitySet="ObjectiveSet" />
+      <End Role="Indicator" EntitySet="IndicatorSet" />
+    </AssociationSet>
+    <AssociationSet Name="MetricTypeIndicator" Association="CMIModel.Store.MetricTypeIndicator">
+      <End Role="MetricType" EntitySet="MetricTypeSet" />
+      <End Role="Indicator" EntitySet="IndicatorSet" />
+    </AssociationSet>
+    <AssociationSet Name="IndicatorDataIndicator" Association="CMIModel.Store.IndicatorDataIndicator">
+      <End Role="Indicator" EntitySet="IndicatorSet" />
+      <End Role="DataIndicator" EntitySet="DataIndicatorSet" />
+    </AssociationSet>
+    <AssociationSet Name="IndicatorTarget" Association="CMIModel.Store.IndicatorTarget">
+      <End Role="Indicator" EntitySet="IndicatorSet" />
+      <End Role="Target" EntitySet="TargetSet" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="CMISet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="TimePeriod" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ObjectiveSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Metric" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Weighting" Type="decimal" Nullable="false" />
+    <Property Name="CMIId" Type="int" Nullable="false" />
+    <Property Name="PerspectiveId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PerspectiveSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="IndicatorSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="MeasurementFrequency" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="UnitMeasure" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ObjectiveId" Type="int" Nullable="false" />
+    <Property Name="MetricTypeId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MetricTypeSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DataIndicatorSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Value" Type="decimal" Nullable="false" />
+    <Property Name="Date" Type="datetime" Nullable="false" />
+    <Property Name="IndicatorId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TargetSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ExpectedValue" Type="decimal" Nullable="false" />
+    <Property Name="DeadlineDate" Type="datetime" Nullable="false" />
+    <Property Name="IndicatorId" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="CMIObjective">
+    <End Role="CMI" Type="CMIModel.Store.CMISet" Multiplicity="1" />
+    <End Role="Objective" Type="CMIModel.Store.ObjectiveSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CMI">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Objective">
+        <PropertyRef Name="CMIId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="PerspectiveObjective">
+    <End Role="Perspective" Type="CMIModel.Store.PerspectiveSet" Multiplicity="1" />
+    <End Role="Objective" Type="CMIModel.Store.ObjectiveSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Perspective">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Objective">
+        <PropertyRef Name="PerspectiveId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ObjectiveIndicator">
+    <End Role="Objective" Type="CMIModel.Store.ObjectiveSet" Multiplicity="1" />
+    <End Role="Indicator" Type="CMIModel.Store.IndicatorSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Objective">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Indicator">
+        <PropertyRef Name="ObjectiveId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="MetricTypeIndicator">
+    <End Role="MetricType" Type="CMIModel.Store.MetricTypeSet" Multiplicity="1" />
+    <End Role="Indicator" Type="CMIModel.Store.IndicatorSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MetricType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Indicator">
+        <PropertyRef Name="MetricTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="IndicatorDataIndicator">
+    <End Role="Indicator" Type="CMIModel.Store.IndicatorSet" Multiplicity="1" />
+    <End Role="DataIndicator" Type="CMIModel.Store.DataIndicatorSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Indicator">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="DataIndicator">
+        <PropertyRef Name="IndicatorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="IndicatorTarget">
+    <End Role="Indicator" Type="CMIModel.Store.IndicatorSet" Multiplicity="1" />
+    <End Role="Target" Type="CMIModel.Store.TargetSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Indicator">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Target">
+        <PropertyRef Name="IndicatorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="CMIModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="CMIModelContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CMISet" EntityType="CMIModel.CMI" />
+          <EntitySet Name="ObjectiveSet" EntityType="CMIModel.Objective" />
+          <AssociationSet Name="CMIObjective" Association="CMIModel.CMIObjective">
+            <End Role="CMI" EntitySet="CMISet" />
+            <End Role="Objective" EntitySet="ObjectiveSet" />
+          </AssociationSet>
+          <EntitySet Name="PerspectiveSet" EntityType="CMIModel.Perspective" />
+          <AssociationSet Name="PerspectiveObjective" Association="CMIModel.PerspectiveObjective">
+            <End Role="Perspective" EntitySet="PerspectiveSet" />
+            <End Role="Objective" EntitySet="ObjectiveSet" />
+          </AssociationSet>
+          <EntitySet Name="IndicatorSet" EntityType="CMIModel.Indicator" />
+          <AssociationSet Name="ObjectiveIndicator" Association="CMIModel.ObjectiveIndicator">
+            <End Role="Objective" EntitySet="ObjectiveSet" />
+            <End Role="Indicator" EntitySet="IndicatorSet" />
+          </AssociationSet>
+          <EntitySet Name="MetricTypeSet" EntityType="CMIModel.MetricType" />
+          <AssociationSet Name="MetricTypeIndicator" Association="CMIModel.MetricTypeIndicator">
+            <End Role="MetricType" EntitySet="MetricTypeSet" />
+            <End Role="Indicator" EntitySet="IndicatorSet" />
+          </AssociationSet>
+          <EntitySet Name="DataIndicatorSet" EntityType="CMIModel.DataIndicator" />
+          <AssociationSet Name="IndicatorDataIndicator" Association="CMIModel.IndicatorDataIndicator">
+            <End Role="Indicator" EntitySet="IndicatorSet" />
+            <End Role="DataIndicator" EntitySet="DataIndicatorSet" />
+          </AssociationSet>
+          <EntitySet Name="TargetSet" EntityType="CMIModel.Target" />
+          <AssociationSet Name="IndicatorTarget" Association="CMIModel.IndicatorTarget">
+            <End Role="Indicator" EntitySet="IndicatorSet" />
+            <End Role="Target" EntitySet="TargetSet" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="CMI">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="TimePeriod" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="Objective" Relationship="CMIModel.CMIObjective" FromRole="CMI" ToRole="Objective" />
+        </EntityType>
+        <EntityType Name="Objective">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" Nullable="false" />
+          <Property Name="Metric" Type="String" Nullable="false" />
+          <Property Name="Weighting" Type="Decimal" Nullable="false" />
+          <NavigationProperty Name="CMI" Relationship="CMIModel.CMIObjective" FromRole="Objective" ToRole="CMI" />
+          <Property Name="CMIId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Perspective" Relationship="CMIModel.PerspectiveObjective" FromRole="Objective" ToRole="Perspective" />
+          <Property Name="PerspectiveId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Indicator" Relationship="CMIModel.ObjectiveIndicator" FromRole="Objective" ToRole="Indicator" />
+        </EntityType>
+        <Association Name="CMIObjective">
+          <End Type="CMIModel.CMI" Role="CMI" Multiplicity="1" />
+          <End Type="CMIModel.Objective" Role="Objective" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CMI">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Objective">
+              <PropertyRef Name="CMIId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Perspective">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <NavigationProperty Name="Objective" Relationship="CMIModel.PerspectiveObjective" FromRole="Perspective" ToRole="Objective" />
+        </EntityType>
+        <Association Name="PerspectiveObjective">
+          <End Type="CMIModel.Perspective" Role="Perspective" Multiplicity="1" />
+          <End Type="CMIModel.Objective" Role="Objective" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Perspective">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Objective">
+              <PropertyRef Name="PerspectiveId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Indicator">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" />
+          <Property Name="MeasurementFrequency" Type="String" Nullable="false" />
+          <Property Name="UnitMeasure" Type="String" Nullable="false" />
+          <NavigationProperty Name="Objective" Relationship="CMIModel.ObjectiveIndicator" FromRole="Indicator" ToRole="Objective" />
+          <Property Name="ObjectiveId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="MetricType" Relationship="CMIModel.MetricTypeIndicator" FromRole="Indicator" ToRole="MetricType" />
+          <Property Name="MetricTypeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DataIndicator" Relationship="CMIModel.IndicatorDataIndicator" FromRole="Indicator" ToRole="DataIndicator" />
+          <NavigationProperty Name="Target" Relationship="CMIModel.IndicatorTarget" FromRole="Indicator" ToRole="Target" />
+        </EntityType>
+        <Association Name="ObjectiveIndicator">
+          <End Type="CMIModel.Objective" Role="Objective" Multiplicity="1" />
+          <End Type="CMIModel.Indicator" Role="Indicator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Objective">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Indicator">
+              <PropertyRef Name="ObjectiveId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="MetricType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Indicator" Relationship="CMIModel.MetricTypeIndicator" FromRole="MetricType" ToRole="Indicator" />
+        </EntityType>
+        <Association Name="MetricTypeIndicator">
+          <End Type="CMIModel.MetricType" Role="MetricType" Multiplicity="1" />
+          <End Type="CMIModel.Indicator" Role="Indicator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MetricType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Indicator">
+              <PropertyRef Name="MetricTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DataIndicator">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Value" Type="Decimal" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="Indicator" Relationship="CMIModel.IndicatorDataIndicator" FromRole="DataIndicator" ToRole="Indicator" />
+          <Property Name="IndicatorId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="IndicatorDataIndicator">
+          <End Type="CMIModel.Indicator" Role="Indicator" Multiplicity="1" />
+          <End Type="CMIModel.DataIndicator" Role="DataIndicator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Indicator">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DataIndicator">
+              <PropertyRef Name="IndicatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Target">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" Nullable="false" />
+          <Property Name="ExpectedValue" Type="Decimal" Nullable="false" />
+          <Property Name="DeadlineDate" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="Indicator" Relationship="CMIModel.IndicatorTarget" FromRole="Target" ToRole="Indicator" />
+          <Property Name="IndicatorId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="IndicatorTarget">
+          <End Type="CMIModel.Indicator" Role="Indicator" Multiplicity="1" />
+          <End Type="CMIModel.Target" Role="Target" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Indicator">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Target">
+              <PropertyRef Name="IndicatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="CMIModelStoreContainer" CdmEntityContainer="CMIModelContainer">
+    <EntitySetMapping Name="CMISet">
+      <EntityTypeMapping TypeName="IsTypeOf(CMIModel.CMI)">
+        <MappingFragment StoreEntitySet="CMISet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="TimePeriod" ColumnName="TimePeriod" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ObjectiveSet">
+      <EntityTypeMapping TypeName="IsTypeOf(CMIModel.Objective)">
+        <MappingFragment StoreEntitySet="ObjectiveSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Metric" ColumnName="Metric" />
+          <ScalarProperty Name="Weighting" ColumnName="Weighting" />
+          <ScalarProperty Name="CMIId" ColumnName="CMIId" />
+          <ScalarProperty Name="PerspectiveId" ColumnName="PerspectiveId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PerspectiveSet">
+      <EntityTypeMapping TypeName="IsTypeOf(CMIModel.Perspective)">
+        <MappingFragment StoreEntitySet="PerspectiveSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="IndicatorSet">
+      <EntityTypeMapping TypeName="IsTypeOf(CMIModel.Indicator)">
+        <MappingFragment StoreEntitySet="IndicatorSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="MeasurementFrequency" ColumnName="MeasurementFrequency" />
+          <ScalarProperty Name="UnitMeasure" ColumnName="UnitMeasure" />
+          <ScalarProperty Name="ObjectiveId" ColumnName="ObjectiveId" />
+          <ScalarProperty Name="MetricTypeId" ColumnName="MetricTypeId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MetricTypeSet">
+      <EntityTypeMapping TypeName="IsTypeOf(CMIModel.MetricType)">
+        <MappingFragment StoreEntitySet="MetricTypeSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DataIndicatorSet">
+      <EntityTypeMapping TypeName="IsTypeOf(CMIModel.DataIndicator)">
+        <MappingFragment StoreEntitySet="DataIndicatorSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Value" ColumnName="Value" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="IndicatorId" ColumnName="IndicatorId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TargetSet">
+      <EntityTypeMapping TypeName="IsTypeOf(CMIModel.Target)">
+        <MappingFragment StoreEntitySet="TargetSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="ExpectedValue" ColumnName="ExpectedValue" />
+          <ScalarProperty Name="DeadlineDate" ColumnName="DeadlineDate" />
+          <ScalarProperty Name="IndicatorId" ColumnName="IndicatorId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
