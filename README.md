@@ -22,9 +22,10 @@ Antes de utilizar Sentinel Prime, asegúrate de tener instalado lo siguiente:
 Sigue estos pasos para instalar y configurar Sentinel Prime en tu entorno local:
 
 1. Clona el repositorio de Sentinel Prime desde GitHub:
-bash 
-git clone https://github.com/Carlos-vargs/CMITecnoNic.git
 
+```bash
+git clone https://github.com/Carlos-vargs/CMITecnoNic.git
+```
 
 ## Uso
 
