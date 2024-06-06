@@ -426,7 +426,6 @@
     <Content Include="Views\Perspective\Details.cshtml" />
     <Content Include="Views\Perspective\Edit.cshtml" />
     <Content Include="Views\Perspective\Index.cshtml" />
-    <Content Include="Views\CMI\Create.cshtml" />
     <Content Include="Views\CMI\Delete.cshtml" />
     <Content Include="Views\CMI\Details.cshtml" />
     <Content Include="Views\CMI\Edit.cshtml" />

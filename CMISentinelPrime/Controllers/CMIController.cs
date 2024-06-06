@@ -31,12 +31,6 @@ namespace CMISentinelPrime.Controllers
             return View(cMI);
         }
 
-        // GET: CMI/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
         // POST: CMI/Create
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
