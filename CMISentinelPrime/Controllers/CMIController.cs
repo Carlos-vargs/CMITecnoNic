@@ -79,21 +79,6 @@ namespace CMISentinelPrime.Controllers
             return View(cMI);
         }
 
-        // GET: CMI/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            CMI cMI = db.CMISet.Find(id);
-            if (cMI == null)
-            {
-                return HttpNotFound();
-            }
-            return View(cMI);
-        }
-
         // POST: CMI/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
