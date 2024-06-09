@@ -1,4 +1,4 @@
-const onLoad = () => {
+const initializeCMIComponents = () => {
   // Modal para crear un CMI
   new Modal("#cmiModal");
 
@@ -8,9 +8,16 @@ const onLoad = () => {
   cmiDatePicker._datepicker = flatpickr(cmiDatePicker);
 };
 
-window.addEventListener("app:mounted", onLoad, { once: true });
-
-document.addEventListener("DOMContentLoaded", function () {
+/**
+ * Inicializa los poppers para los dropdowns al observar cambios en el DOM y en la carga inicial.
+ *
+ * Esta función configura y observa elementos especificados dentro del contenedor con ID "cmi-container",
+ * inicializando poppers para los elementos que corresponden a referencias de dropdowns. Utiliza Popper.js para
+ * gestionar la colocación y comportamiento visual de los dropdowns asociados.
+ *
+ * @function initializeDropdownPoppers
+ */
+const initializeDropdownPoppers = () => {
   const initPoppers = () => {
     document.querySelectorAll(".popper-ref").forEach((button) => {
       if (!button.dataset.popperInitialized) {
@@ -53,4 +60,10 @@ document.addEventListener("DOMContentLoaded", function () {
   observer.observe(targetNode, configObserver);
 
   initPoppers();
+};
+
+window.addEventListener("app:mounted", initializeCMIComponents, { once: true });
+
+document.addEventListener("DOMContentLoaded", function () {
+  initializeDropdownPoppers();
 });
