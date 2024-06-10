@@ -10,6 +10,7 @@ module.exports = {
       components: ["./Scripts/libs/components.js", "./Scripts/libs/forms.js"],
       pages: glob.sync("./Scripts/pages/**/*.js"),
       cmi: "./Scripts/pages-2/cmi.js",
+      perspectives: "./Scripts/pages-2/perspectives.js",
     },
   output: {
     filename: "[name].bundle.js", // Nombre dinámico basado en la entrada
