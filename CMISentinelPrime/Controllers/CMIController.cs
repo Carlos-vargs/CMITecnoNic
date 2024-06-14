@@ -1,4 +1,6 @@
 ﻿using CMISentinelPrime.Models;
+using CMISentinelPrime.ViewModels;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -23,12 +25,43 @@ namespace CMISentinelPrime.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CMI cMI = db.CMISet.Find(id);
+
+            CMI cMI = db.CMISet
+                .Include("Objective.Perspective")
+                .Include("Objective.Indicator")
+                .FirstOrDefault(c => c.Id == id);
+
             if (cMI == null)
             {
                 return HttpNotFound();
             }
-            return View(cMI);
+
+            var perspectives = db.PerspectiveSet.ToList();
+            var objectivesByPerspective = new Dictionary<int, List<Objective>>();
+            var indicatorsByObjective = new Dictionary<int, List<Indicator>>();
+
+
+            foreach (var perspective in perspectives)
+            {
+                objectivesByPerspective[perspective.Id] = cMI.Objective
+                                                             .Where(o => o.PerspectiveId == perspective.Id)
+                                                             .ToList();
+            }
+
+            foreach (var objective in cMI.Objective)
+            {
+                indicatorsByObjective[objective.Id] = objective.Indicator.ToList();
+            }
+
+            CMIWithPerspectivesViewModel viewModel = new CMIWithPerspectivesViewModel
+            {
+                CMI = cMI,
+                Perspectives = perspectives,
+                ObjectivesByPerspective = objectivesByPerspective,
+                IndicatorsByObjective = indicatorsByObjective
+            };
+
+            return View(viewModel);
         }
 
         // POST: CMI/Create

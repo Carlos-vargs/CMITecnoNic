@@ -3,9 +3,22 @@ const initializePerspectivesComponents = () => {
   window.tableCollapse = new Accordion(
     document.querySelector("#table-collapse"),
     {
+      onlyChildNodes: true,
+      duration: 200,
+      showMultiple: true,
+    }
+  );
+
+  // Table for Objetives
+  window.tableCollapseObjetive = new Accordion(
+    document.querySelector("#table-collapse-objetive"),
+    {
       onlyChildNodes: false,
       duration: 200,
       showMultiple: true,
+      elementClass: 'ac-objetive',
+      triggerClass: 'ac-trigger-objetive',
+      activeClass: 'is-active-objetive'
     }
   );
 
