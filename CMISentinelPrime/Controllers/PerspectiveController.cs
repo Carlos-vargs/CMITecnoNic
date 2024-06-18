@@ -42,16 +42,16 @@ namespace CMISentinelPrime.Controllers
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name")] Perspective perspective)
+        public ActionResult Create([Bind(Include = "Id,Name")] Perspective perspective, int CmiId)
         {
             if (ModelState.IsValid)
             {
                 db.PerspectiveSet.Add(perspective);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "CMI", new { id = CmiId });
             }
 
-            return View(perspective);
+            return RedirectToAction("Index", "CMI");
         }
 
         // GET: Perspective/Edit/5
@@ -85,30 +85,19 @@ namespace CMISentinelPrime.Controllers
             return View(perspective);
         }
 
-        // GET: Perspective/Delete/5
-        public ActionResult Delete(int? id)
+        // POST: Perspective/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id, int CmiId)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             Perspective perspective = db.PerspectiveSet.Find(id);
             if (perspective == null)
             {
                 return HttpNotFound();
             }
-            return View(perspective);
-        }
-
-        // POST: Perspective/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Perspective perspective = db.PerspectiveSet.Find(id);
             db.PerspectiveSet.Remove(perspective);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "CMI", new { id = CmiId });
         }
 
         protected override void Dispose(bool disposing)
