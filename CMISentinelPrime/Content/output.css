@@ -1002,6 +1002,9 @@ video {
 .w-5\.5 {
   width: 1.375rem;
 }
+.w-52 {
+  width: 13rem;
+}
 .w-56 {
   width: 14rem;
 }
@@ -1022,6 +1025,9 @@ video {
 }
 .w-8 {
   width: 2rem;
+}
+.w-8\/12 {
+  width: 66.666667%;
 }
 .w-80 {
   width: 20rem;
@@ -1056,6 +1062,9 @@ video {
 }
 .max-w-4xl {
   max-width: 56rem;
+}
+.max-w-80 {
+  max-width: 20rem;
 }
 .max-w-lg {
   max-width: 32rem;
@@ -1774,6 +1783,9 @@ video {
 .bg-slate-900 {
   background-color: #0f172a;
 }
+.bg-slate-900\/60 {
+  background-color: rgb(15 23 42 / 0.6);
+}
 .bg-success {
   background-color: #10b981;
 }
@@ -2090,6 +2102,12 @@ video {
 .pl-4 {
   padding-left: 1rem;
 }
+.pl-5 {
+  padding-left: 1.25rem;
+}
+.pl-6 {
+  padding-left: 1.5rem;
+}
 .pl-9 {
   padding-left: 2.25rem;
 }
@@ -2104,6 +2122,12 @@ video {
 }
 .pr-3 {
   padding-right: 0.75rem;
+}
+.pr-4 {
+  padding-right: 1rem;
+}
+.pr-5 {
+  padding-right: 1.25rem;
 }
 .pr-6 {
   padding-right: 1.5rem;
@@ -2819,6 +2843,12 @@ video {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
   }
+  .sm\:pl-5 {
+    padding-left: 1.25rem;
+  }
+  .sm\:pr-5 {
+    padding-right: 1.25rem;
+  }
 }
 @media (min-width: 1024px) {
   .lg\:col-span-4 {
@@ -2852,6 +2882,9 @@ video {
   .lg\:py-6 {
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
+  }
+  .lg\:pr-5 {
+    padding-right: 1.25rem;
   }
 }
 @media (min-width: 1280px) {
@@ -3077,6 +3110,14 @@ video {
   .print\:hidden {
     display: none;
   }
+}
+.\[\&\.is-active-objetive_\.ac-objetive-icon\]\:rotate-180.is-active-objetive .ac-objetive-icon {
+  --tw-rotate: 180deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.\[\&\.is-active_\.ac-icon\]\:rotate-180.is-active .ac-icon {
+  --tw-rotate: 180deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 .\[\&\.is-active_\.ac-trigger\]\:font-semibold.is-active .ac-trigger {
   font-weight: 600;
