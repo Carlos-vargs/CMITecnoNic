@@ -42,7 +42,6 @@ const initializeDropdownPoppers = () => {
         );
 
         button.dataset.popperInitialized = "true";
-        console.count("testing");
       }
     });
   };

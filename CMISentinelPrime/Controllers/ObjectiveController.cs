@@ -51,12 +51,10 @@ namespace CMISentinelPrime.Controllers
             {
                 db.ObjectiveSet.Add(objective);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "CMI", new { id = objective.CMIId });
             }
 
-            ViewBag.CMIId = new SelectList(db.CMISet, "Id", "Name", objective.CMIId);
-            ViewBag.PerspectiveId = new SelectList(db.PerspectiveSet, "Id", "Name", objective.PerspectiveId);
-            return View(objective);
+            return RedirectToAction("Index", "CMI");
         }
 
         // GET: Objective/Edit/5
