@@ -46,16 +46,16 @@ namespace CMISentinelPrime.Controllers
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name")] Perspective perspective)
+        public ActionResult Create([Bind(Include = "Id,Name")] Perspective perspective, int CmiId)
         {
             if (ModelState.IsValid)
             {
                 db.PerspectiveSet.Add(perspective);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "CMI", new { id = CmiId });
             }
 
-            return View(perspective);
+            return RedirectToAction("Index", "CMI");
         }
 
         // GET: Perspectives/Edit/5
@@ -107,12 +107,12 @@ namespace CMISentinelPrime.Controllers
         // POST: Perspectives/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id, int CmiId)
         {
             Perspective perspective = db.PerspectiveSet.Find(id);
             db.PerspectiveSet.Remove(perspective);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "CMI", new { id = CmiId });
         }
 
         protected override void Dispose(bool disposing)
