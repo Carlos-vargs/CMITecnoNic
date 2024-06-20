@@ -114,12 +114,12 @@ namespace CMISentinelPrime.Controllers
         // POST: Objectives/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id, int CmiId)
         {
             Objective objective = db.ObjectiveSet.Find(id);
             db.ObjectiveSet.Remove(objective);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "CMI", new { id = CmiId });
         }
 
         protected override void Dispose(bool disposing)
