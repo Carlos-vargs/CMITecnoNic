@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 05/04/2024 00:56:19
--- Generated from EDMX file: D:\Documentos\Visual Studio 2022\Proyectos\CMISentinelPrime\CMISentinelPrime\Models\CMIModel.edmx
+-- Date Created: 06/19/2024 18:22:33
+-- Generated from EDMX file: C:\Users\David\Documents\Local\CMITecnoNic\CMISentinelPrime\Models\CMIModel.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -17,11 +17,50 @@ GO
 -- Dropping existing FOREIGN KEY constraints
 -- --------------------------------------------------
 
+IF OBJECT_ID(N'[dbo].[FK_CMIObjective]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[ObjectiveSet] DROP CONSTRAINT [FK_CMIObjective];
+GO
+IF OBJECT_ID(N'[dbo].[FK_IndicatorDataIndicator]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[DataIndicatorSet] DROP CONSTRAINT [FK_IndicatorDataIndicator];
+GO
+IF OBJECT_ID(N'[dbo].[FK_IndicatorTarget]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[TargetSet] DROP CONSTRAINT [FK_IndicatorTarget];
+GO
+IF OBJECT_ID(N'[dbo].[FK_MetricTypeIndicator]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[IndicatorSet] DROP CONSTRAINT [FK_MetricTypeIndicator];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ObjectiveIndicator]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[IndicatorSet] DROP CONSTRAINT [FK_ObjectiveIndicator];
+GO
+IF OBJECT_ID(N'[dbo].[FK_PerspectiveObjective]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[ObjectiveSet] DROP CONSTRAINT [FK_PerspectiveObjective];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
 -- --------------------------------------------------
 
+IF OBJECT_ID(N'[dbo].[CMISet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[CMISet];
+GO
+IF OBJECT_ID(N'[dbo].[DataIndicatorSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[DataIndicatorSet];
+GO
+IF OBJECT_ID(N'[dbo].[IndicatorSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[IndicatorSet];
+GO
+IF OBJECT_ID(N'[dbo].[MetricTypeSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[MetricTypeSet];
+GO
+IF OBJECT_ID(N'[dbo].[ObjectiveSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[ObjectiveSet];
+GO
+IF OBJECT_ID(N'[dbo].[PerspectiveSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[PerspectiveSet];
+GO
+IF OBJECT_ID(N'[dbo].[TargetSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[TargetSet];
+GO
 
 -- --------------------------------------------------
 -- Creating all tables
@@ -67,7 +106,8 @@ GO
 
 -- Creating table 'MetricTypeSet'
 CREATE TABLE [dbo].[MetricTypeSet] (
-    [Id] int IDENTITY(1,1) NOT NULL
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [Name] nvarchar(max)  NOT NULL
 );
 GO
 

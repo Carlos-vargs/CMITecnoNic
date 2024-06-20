@@ -1,23 +1,27 @@
-﻿using CMISentinelPrime.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
+using CMISentinelPrime.Models;
 
 namespace CMISentinelPrime.Controllers
 {
-    public class TargetController : Controller
+    public class TargetsController : Controller
     {
         private CMIModelContainer db = new CMIModelContainer();
 
-        // GET: Target
+        // GET: Targets
         public ActionResult Index()
         {
             var targetSet = db.TargetSet.Include(t => t.Indicator);
             return View(targetSet.ToList());
         }
 
-        // GET: Target/Details/5
+        // GET: Targets/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -32,14 +36,14 @@ namespace CMISentinelPrime.Controllers
             return View(target);
         }
 
-        // GET: Target/Create
+        // GET: Targets/Create
         public ActionResult Create()
         {
             ViewBag.IndicatorId = new SelectList(db.IndicatorSet, "Id", "Name");
             return View();
         }
 
-        // POST: Target/Create
+        // POST: Targets/Create
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -57,7 +61,7 @@ namespace CMISentinelPrime.Controllers
             return View(target);
         }
 
-        // GET: Target/Edit/5
+        // GET: Targets/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -73,7 +77,7 @@ namespace CMISentinelPrime.Controllers
             return View(target);
         }
 
-        // POST: Target/Edit/5
+        // POST: Targets/Edit/5
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -90,7 +94,7 @@ namespace CMISentinelPrime.Controllers
             return View(target);
         }
 
-        // GET: Target/Delete/5
+        // GET: Targets/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -105,7 +109,7 @@ namespace CMISentinelPrime.Controllers
             return View(target);
         }
 
-        // POST: Target/Delete/5
+        // POST: Targets/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

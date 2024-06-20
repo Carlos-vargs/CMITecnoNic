@@ -1,23 +1,27 @@
-﻿using CMISentinelPrime.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
+using CMISentinelPrime.Models;
 
 namespace CMISentinelPrime.Controllers
 {
-    public class DataIndicatorController : Controller
+    public class DataIndicatorsController : Controller
     {
         private CMIModelContainer db = new CMIModelContainer();
 
-        // GET: DataIndicator
+        // GET: DataIndicators
         public ActionResult Index()
         {
             var dataIndicatorSet = db.DataIndicatorSet.Include(d => d.Indicator);
             return View(dataIndicatorSet.ToList());
         }
 
-        // GET: DataIndicator/Details/5
+        // GET: DataIndicators/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -32,14 +36,14 @@ namespace CMISentinelPrime.Controllers
             return View(dataIndicator);
         }
 
-        // GET: DataIndicator/Create
+        // GET: DataIndicators/Create
         public ActionResult Create()
         {
             ViewBag.IndicatorId = new SelectList(db.IndicatorSet, "Id", "Name");
             return View();
         }
 
-        // POST: DataIndicator/Create
+        // POST: DataIndicators/Create
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -57,7 +61,7 @@ namespace CMISentinelPrime.Controllers
             return View(dataIndicator);
         }
 
-        // GET: DataIndicator/Edit/5
+        // GET: DataIndicators/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -73,7 +77,7 @@ namespace CMISentinelPrime.Controllers
             return View(dataIndicator);
         }
 
-        // POST: DataIndicator/Edit/5
+        // POST: DataIndicators/Edit/5
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -90,7 +94,7 @@ namespace CMISentinelPrime.Controllers
             return View(dataIndicator);
         }
 
-        // GET: DataIndicator/Delete/5
+        // GET: DataIndicators/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -105,7 +109,7 @@ namespace CMISentinelPrime.Controllers
             return View(dataIndicator);
         }
 
-        // POST: DataIndicator/Delete/5
+        // POST: DataIndicators/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

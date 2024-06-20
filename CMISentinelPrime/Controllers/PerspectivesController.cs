@@ -1,22 +1,26 @@
-﻿using CMISentinelPrime.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
+using CMISentinelPrime.Models;
 
 namespace CMISentinelPrime.Controllers
 {
-    public class PerspectiveController : Controller
+    public class PerspectivesController : Controller
     {
         private CMIModelContainer db = new CMIModelContainer();
 
-        // GET: Perspective
+        // GET: Perspectives
         public ActionResult Index()
         {
             return View(db.PerspectiveSet.ToList());
         }
 
-        // GET: Perspective/Details/5
+        // GET: Perspectives/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -31,30 +35,30 @@ namespace CMISentinelPrime.Controllers
             return View(perspective);
         }
 
-        // GET: Perspective/Create
+        // GET: Perspectives/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Perspective/Create
+        // POST: Perspectives/Create
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name")] Perspective perspective, int CmiId)
+        public ActionResult Create([Bind(Include = "Id,Name")] Perspective perspective)
         {
             if (ModelState.IsValid)
             {
                 db.PerspectiveSet.Add(perspective);
                 db.SaveChanges();
-                return RedirectToAction("Details", "CMI", new { id = CmiId });
+                return RedirectToAction("Index");
             }
 
-            return RedirectToAction("Index", "CMI");
+            return View(perspective);
         }
 
-        // GET: Perspective/Edit/5
+        // GET: Perspectives/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -69,7 +73,7 @@ namespace CMISentinelPrime.Controllers
             return View(perspective);
         }
 
-        // POST: Perspective/Edit/5
+        // POST: Perspectives/Edit/5
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -85,19 +89,30 @@ namespace CMISentinelPrime.Controllers
             return View(perspective);
         }
 
-        // POST: Perspective/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id, int CmiId)
+        // GET: Perspectives/Delete/5
+        public ActionResult Delete(int? id)
         {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             Perspective perspective = db.PerspectiveSet.Find(id);
             if (perspective == null)
             {
                 return HttpNotFound();
             }
+            return View(perspective);
+        }
+
+        // POST: Perspectives/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            Perspective perspective = db.PerspectiveSet.Find(id);
             db.PerspectiveSet.Remove(perspective);
             db.SaveChanges();
-            return RedirectToAction("Details", "CMI", new { id = CmiId });
+            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)

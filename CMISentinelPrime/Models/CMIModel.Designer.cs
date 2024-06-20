@@ -1,4 +1,4 @@
-﻿// La generación de código T4 está habilitada para el modelo 'D:\Documentos\Visual Studio 2022\Proyectos\CMISentinelPrime\CMISentinelPrime\Models\CMIModel.edmx'. 
+﻿// La generación de código T4 está habilitada para el modelo 'C:\Users\David\Documents\Local\CMITecnoNic\CMISentinelPrime\Models\CMIModel.edmx'. 
 // Para habilitar la generación de código heredada, cambie el valor de la propiedad del diseñador 'Estrategia de generación de código'
 // por 'ObjectContext heredado'. Esta propiedad está disponible en la ventana Propiedades cuando se abre
 // el modelo en el diseñador.

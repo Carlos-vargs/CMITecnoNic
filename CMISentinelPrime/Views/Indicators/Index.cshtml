@@ -27,7 +27,7 @@
             @Html.DisplayNameFor(model => model.Objective.Description)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.MetricType.Id)
+            @Html.DisplayNameFor(model => model.MetricType.Name)
         </th>
         <th></th>
     </tr>
@@ -50,7 +50,7 @@
             @Html.DisplayFor(modelItem => item.Objective.Description)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.MetricType.Id)
+            @Html.DisplayFor(modelItem => item.MetricType.Name)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
