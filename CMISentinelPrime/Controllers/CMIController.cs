@@ -39,7 +39,7 @@ namespace CMISentinelPrime.Controllers
             var perspectives = db.PerspectiveSet.ToList();
             var objectivesByPerspective = new Dictionary<int, List<Objective>>();
             var indicatorsByObjective = new Dictionary<int, List<Indicator>>();
-
+            var metricTypes = db.MetricTypeSet.ToList();
 
             foreach (var perspective in perspectives)
             {
@@ -58,7 +58,8 @@ namespace CMISentinelPrime.Controllers
                 CMI = cMI,
                 Perspectives = perspectives,
                 ObjectivesByPerspective = objectivesByPerspective,
-                IndicatorsByObjective = indicatorsByObjective
+                IndicatorsByObjective = indicatorsByObjective,
+                MetricTypes = metricTypes
             };
 
             return View(viewModel);

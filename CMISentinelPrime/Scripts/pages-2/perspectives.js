@@ -5,6 +5,13 @@ const initializePerspectivesComponents = () => {
   // Add Modal For Objetives
   new Modal("#objetiveModal");
 
+  // Add Modal For Indicators
+  new Modal("#indicatorModal");
+
+  // Add Modal For Indicator Data
+  new Modal("#indicatorDataModal");
+
+  // Modal to create new objectives
   window.openObjectiveModal = function (dispatcher) {
     const title = document.getElementById("modalTitle");
     const inputId = document.getElementById("perspectiveId");
@@ -13,6 +20,17 @@ const initializePerspectivesComponents = () => {
 
     title.textContent = "Crear Objetivo - " + perspectiveName;
     inputId.value = perspectiveId;
+  };
+
+  // Modal to create new indicators
+  window.openIndicatorModal = function (dispatcher) {
+    const title = document.getElementById("modalTitleIndicator");
+    const inputId = document.getElementById("objectiveId");
+    const objectiveId = dispatcher.getAttribute("data-id");
+    const objectiveName = dispatcher.getAttribute("data-name");
+
+    title.textContent = "Crear Indicador - " + objectiveName;
+    inputId.value = objectiveId;
   };
 
   // Table Collapse
@@ -181,5 +199,9 @@ document.addEventListener("DOMContentLoaded", function () {
   initializeDropdownPoppers(
     "dropdown-wrapper-objetive-",
     "table-collapse-objetive"
+  );
+  initializeDropdownPoppers(
+    "dropdown-wrapper-indicator-",
+    "table-collapse-indicator"
   );
 });

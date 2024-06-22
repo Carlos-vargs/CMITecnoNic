@@ -64,8 +64,7 @@
                             </th>
                         </tr>
                     </thead>
-                    @if (Model.Perspectives != null && Model.Perspectives.Any())
-                    {
+                    @if (Model.Perspectives != null && Model.Perspectives.Any()) {
                         foreach (var perspective in Model.Perspectives)
                         {
                             <tbody class="ac [&.is-active_.ac-icon]:rotate-180">
@@ -208,8 +207,7 @@
                                                                     </th>
                                                                 </tr>
                                                             </thead>
-                                                            @if (Model.ObjectivesByPerspective.TryGetValue(perspective.Id, out var objectives) && objectives.Any())
-                                                            {
+                                                            @if (Model.ObjectivesByPerspective.TryGetValue(perspective.Id, out var objectives) && objectives.Any()) {
                                                                 foreach (var objective in objectives)
                                                                 {
                                                                     <tbody class="ac-objetive [&.is-active-objetive_.ac-objetive-icon]:rotate-180">
@@ -265,6 +263,12 @@
                                                                                     <div class="popper-root z-10">
                                                                                         <div class="popper-box rounded-md border border-slate-150 bg-white py-1.5 font-inter dark:border-navy-500 dark:bg-navy-700">
                                                                                             <ul>
+                                                                                                <li data-toggle="modal" onclick="openIndicatorModal(this)" data-id="@objective.Id" data-name="@objective.Description" data-target="#indicatorModal" class="flex h-8 items-center cursor-pointer space-x-3 px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">
+                                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 16 16">
+                                                                                                        <path fill="currentColor" d="m12.877 5.847l-1.02 1.02a.5.5 0 0 1-.708-.707l1.1-1.099q-.075-.08-.152-.157A6.47 6.47 0 0 0 8 3.019V4.5a.5.5 0 0 1-1 0V3.019a6.47 6.47 0 0 0-4.261 2.055l1.07 1.071a.5.5 0 0 1-.706.707l-.99-.99A6.46 6.46 0 0 0 1.018 10H2.5a.5.5 0 1 1 0 1H1.174q.125.53.337 1.03a.5.5 0 1 1-.922.39A7.5 7.5 0 0 1 0 9.5a7.48 7.48 0 0 1 2.197-5.304A7.5 7.5 0 0 1 7.5 2a7.5 7.5 0 0 1 5.304 2.197A7.48 7.48 0 0 1 15 9.5a7.5 7.5 0 0 1-.59 2.92a.5.5 0 0 1-.92-.39q.21-.5.336-1.03H12.5a.5.5 0 1 1 0-1h1.481a6.48 6.48 0 0 0-1.104-4.153m-6.041 5.317a.993.993 0 0 1-.01-1.404c.384-.385 2.882-2.002 3.149-1.735s-1.35 2.765-1.735 3.15a.993.993 0 0 1-1.404-.01" />
+                                                                                                    </svg>
+                                                                                                    <span>Crear Indicador</span>
+                                                                                                </li>
                                                                                                 <li>
                                                                                                     <a href="#"
                                                                                                        class="flex h-8 items-center space-x-3 px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">
@@ -309,7 +313,7 @@
                                                                                 <div class="ac-panel">
                                                                                     <div class="px-4 pb-4 sm:px-5">
                                                                                         <div class="is-scrollbar-hidden min-w-full overflow-x-auto">
-                                                                                            <table class="is-hoverable w-full text-left">
+                                                                                            <table class="is-hoverable w-full text-left" id="table-collapse-indicator">
                                                                                                 <thead>
                                                                                                     <tr>
                                                                                                         <th class="whitespace-nowrap rounded-tl-lg bg-slate-200 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100">
@@ -365,202 +369,357 @@
                                                                                                                     100%
                                                                                                                 </td>
                                                                                                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
-                                                                                                                    <div class="flex justify-start space-x-2">
-                                                                                                                        <button onclick="$notification({ text: 'Item remove action', variant: 'warning' })" class="btn h-8 w-8 p-0 text-info hover:bg-info/20 focus:bg-info/20 active:bg-info/25">
-                                                                                                                            <i class="fa fa-edit"></i>
-                                                                                                                        </button>
-                                                                                                                        <button onclick="$notification({ text: 'Item edit action', variant: 'info' })" class="btn h-8 w-8 p-0 text-error hover:bg-error/20 focus:bg-error/20 active:bg-error/25">
-                                                                                                                            <i class="fa fa-trash-alt"></i>
-                                                                                                                        </button>
+                                                                                                                    <div id="dropdown-wrapper-indicator-@indicator.Id" class="inline-flex">
+                                                                                                                    <button class="popper-ref btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90 [&.is-active_svg]:rotate-180">
+                                                                                                                        <span>Acciones</span>
+                                                                                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                                                            class="h-4 w-4 transition-transform duration-200" fill="none"
+                                                                                                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                                                                                                        </svg>
+                                                                                                                    </button>
+                                                                                                                    <div class="popper-root z-10">
+                                                                                                                        <div class="popper-box rounded-md border border-slate-150 bg-white py-1.5 font-inter dark:border-navy-500 dark:bg-navy-700">
+                                                                                                                            <ul>
+                                                                                                                                <li data-toggle="modal" onclick="openIndicatorDataModal(this)" data-id="@objective.Id" data-name="@objective.Description" data-target="#indicatorDataModal" class="flex h-8 items-center cursor-pointer space-x-3 px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">
+                                                                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24">
+                                                                                                                                        <g fill="none" stroke="currentColor" stroke-width="1.5">
+                                                                                                                                            <path stroke-linecap="round" d="M4 18V6m16 0v12" />
+                                                                                                                                            <path d="M12 10c4.418 0 8-1.79 8-4s-3.582-4-8-4s-8 1.79-8 4s3.582 4 8 4Zm8 2c0 2.21-3.582 4-8 4s-8-1.79-8-4m16 6c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                                                                                                                                        </g>
+                                                                                                                                    </svg>
+                                                                                                                                    <span>Agregar Datos</span>
+                                                                                                                                </li>
+                                                                                                                                <li>
+                                                                                                                                    <a href="#"
+                                                                                                                                    class="flex h-8 items-center space-x-3 px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">
+                                                                                                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5"
+                                                                                                                                            fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                                                                                                            stroke-width="1.5">
+                                                                                                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                                                                                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                                                                                                                        </svg>
+                                                                                                                                        <span>Editar Indicador</span>
+                                                                                                                                    </a>
+                                                                                                                                </li>
+                                                                                                                                <li>
+                                                                                                                                    @using (Html.BeginForm("Delete", "Objectives",
+                                                                                                                                FormMethod.Post, new { id = "deleteObjetiveForm-" + objective.Id }))
+                                                                                                                                    {
+                                                                                                                                        @Html.AntiForgeryToken()
+                                                                                                                                        <input type="hidden" name="id" value="@objective.Id" />
+                                                                                                                                        <input type="hidden" name="CmiId" value="@Model.CMI.Id" />
+
+                                                                                                                                        <a href="javascript:void(0);"
+                                                                                                                                        onclick="document.getElementById('deleteObjetiveForm-@objective.Id').submit();"
+                                                                                                                                        class="flex h-8 items-center space-x-3 px-3 pr-8 font-medium tracking-wide text-error outline-none transition-all hover:bg-error/20 focus:bg-error/20">
+                                                                                                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5"
+                                                                                                                                                fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                                                                                                                stroke-width="1.5">
+                                                                                                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                                                                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                                                                                                            </svg>
+                                                                                                                                            <span>Eliminar Indicador</span>
+                                                                                                                                        </a>
+                                                                                                                                    }
+                                                                                                                                </li>
+                                                                                                                            </ul>
+                                                                                                                        </div>
                                                                                                                     </div>
+                                                                                                                </div>
                                                                                                                 </td>
                                                                                                             </tr>
                                                                                                         }
-                                                                                                    }
-                                                                                                    else
+                                                                                                    } 
+                                                                                                    else 
                                                                                                     {
-                                                                                                    <tbody class="ac [&.is-active_.ac-icon]:rotate-180">
-                                                                                                        <tr>
-                                                                                                            <td class="rounded-lg px-5 py-8 text-lg text-center" colspan="100">
-                                                                                                                Lo sentimos, no hemos encontrado ningún registro relacionado con
-                                                                                                                tu búsqueda.
-                                                                                                            </td>
-                                                                                                        </tr>
-                                                                                                    </tbody>
-                                                                                                }
-
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    }
-                                }
-                                else
-                                {
-                                    <tbody class="ac [&.is-active_.ac-icon]:rotate-180">
-                                        <tr>
-                                            <td class="rounded-lg px-5 py-8 text-lg text-center" colspan="100">
-                                                Lo sentimos, no hemos encontrado ningún registro relacionado con
-                                                tu búsqueda.
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                }
+                                                                                                        <tbody class="ac [&.is-active_.ac-icon]:rotate-180">
+                                                                                                            <tr>
+                                                                                                                <td class="rounded-lg px-5 py-8 text-lg text-center" colspan="100">
+                                                                                                                    Lo sentimos, no hemos encontrado ningún registro relacionado con
+                                                                                                                    tu búsqueda.
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                        </tbody>
+                                                                                                    }
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                }
+                                                            } else {
+                                                                <tbody class="ac [&.is-active_.ac-icon]:rotate-180">
+                                                                    <tr>
+                                                                        <td class="rounded-lg px-5 py-8 text-lg text-center" colspan="100">
+                                                                            Lo sentimos, no hemos encontrado ningún registro relacionado con
+                                                                            tu búsqueda.
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            }
                                                         </table>
                                                     </div>
                                                 </div>
                                             </div>
-                                            </div>
-                                            </td>
-                                            </tr>
-                                            </tbody>
-                                        }
-                                    }
-                                    else
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        }
+                    } else {
+                        <tbody class="ac [&.is-active_.ac-icon]:rotate-180">
+                            <tr>
+                                <td class="rounded-lg px-5 py-8 text-lg text-center" colspan="100">
+                                    Lo sentimos, no hemos encontrado ningún registro relacionado con
+                                    tu búsqueda.
+                                </td>
+                            </tr>
+                        </tbody>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @* Modal de Perspectiva *@
+    <div id="perspectiveModal"
+            class="modal shift-up fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden px-4 py-6 sm:px-5"
+            role="dialog">
+        <div class="modal-overlay absolute inset-0 bg-slate-900/60"></div>
+        <div class="modal-content scrollbar-sm relative flex flex-col overflow-y-auto rounded-lg bg-white pb-4 text-center dark:bg-navy-700">
+            <div class="col-span-12 grid lg:col-span-8">
+                <div class="card">
+                    <div class="border-b border-slate-200 p-4 dark:border-navy-500 sm:px-5">
+                        <div class="flex items-center space-x-2">
+                            <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 p-1 text-primary dark:bg-accent-light/10 dark:text-accent-light">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em"
+                                        viewBox="0 0 20 20">
+                                    <path fill="currentColor"
+                                            d="M10.505 3.117a1 1 0 0 0-1.011 0l-6.01 3.52a1 1 0 0 0 .003 1.726l6.009 3.502a1 1 0 0 0 1.007 0l6.009-3.502a1 1 0 0 0 .001-1.727zM3.07 9.65l6.438 3.622a1 1 0 0 0 .98 0l6.438-3.622a1 1 0 0 1-.415 1.26l-6.01 3.502a1 1 0 0 1-1.006 0l-6.01-3.502a1 1 0 0 1-.415-1.26m0 2.453l6.438 3.622a1 1 0 0 0 .98 0l6.438-3.622a1 1 0 0 1-.415 1.26l-6.01 3.502a1 1 0 0 1-1.006 0l-6.01-3.502a1 1 0 0 1-.415-1.26" />
+                                </svg>
+                            </div>
+                            <h4 class="text-lg font-medium text-slate-700 dark:text-navy-100">
+                                Crear Perspectiva
+                            </h4>
+                        </div>
+                    </div>
+                    <form action="@Url.Action("Create", "Perspectives")" method="post" class="space-y-4 p-4 pb-0 max-w-md">
+
+                        @Html.AntiForgeryToken()
+
+                        @Html.Hidden("CmiId", Model.CMI.Id)
+
+                        <div class="grid grid-cols-1 gap-4">
+                            <label class="block text-left">
+                                <span>Nombre</span>
+
+                                <input class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                        placeholder="Ingrese el nombre" type="text" name="Name" />
+
+                            </label>
+                        </div>
+                        <div class="flex justify-end space-x-2 pt-4">
+                            <button data-close-modal type="reset"
+                                    class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90">
+                                <span>Cancelar</span>
+                            </button>
+                            <button type="submit"
+                                    class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">
+                                <span>Guardar</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* Modal de Objetivos *@
+    <div id="objetiveModal"
+            class="modal shift-up fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden px-4 py-6 sm:px-5"
+            role="dialog">
+        <div class="modal-overlay absolute inset-0 bg-slate-900/60"></div>
+        <div class="modal-content scrollbar-sm relative flex flex-col overflow-y-auto rounded-lg bg-white pb-4 text-center dark:bg-navy-700">
+            <div class="col-span-12 grid lg:col-span-8">
+                <div class="card">
+                    <div class="border-b border-slate-200 p-4 dark:border-navy-500 sm:px-5">
+                        <div class="flex items-center space-x-2">
+                            <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 p-1 text-primary dark:bg-accent-light/10 dark:text-accent-light">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em"
+                                        viewBox="0 0 20 20">
+                                    <path fill="currentColor"
+                                            d="M10.505 3.117a1 1 0 0 0-1.011 0l-6.01 3.52a1 1 0 0 0 .003 1.726l6.009 3.502a1 1 0 0 0 1.007 0l6.009-3.502a1 1 0 0 0 .001-1.727zM3.07 9.65l6.438 3.622a1 1 0 0 0 .98 0l6.438-3.622a1 1 0 0 1-.415 1.26l-6.01 3.502a1 1 0 0 1-1.006 0l-6.01-3.502a1 1 0 0 1-.415-1.26m0 2.453l6.438 3.622a1 1 0 0 0 .98 0l6.438-3.622a1 1 0 0 1-.415 1.26l-6.01 3.502a1 1 0 0 1-1.006 0l-6.01-3.502a1 1 0 0 1-.415-1.26" />
+                                </svg>
+                            </div>
+                            <h4 id="modalTitle" class="text-lg font-medium text-slate-700 dark:text-navy-100">
+                                Crear Objetivo
+                            </h4>
+                        </div>
+                    </div>
+                    <form action="@Url.Action("Create", "Objectives")" method="post" class="space-y-4 p-4 pb-0 max-w-md">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" id="perspectiveId" name="PerspectiveId">
+                        <input type="hidden" name="CMIId" value="@Model.CMI.Id" />
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="block text-left">
+                                <span>Metrica</span>
+
+                                <input readonly class="form-input mt-1.5 w-full read-only:cursor-not-allowed rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                        placeholder="Ingrese el tipo de metrica" type="text" value="%" name="Metric" />
+
+                            </label>
+                            <label class="block text-left">
+                                <span>Peso</span>
+
+                                <input readonly class="form-input read-only:cursor-not-allowed mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                        placeholder="Ingrese el peso" type="text" value="100" name="Weighting" />
+
+                            </label>
+                        </div>
+                        <div class="grid grid-cols-1 gap-4">
+                            <label class="block text-left">
+                                <span>Descripcion</span>
+
+                                <textarea rows="4"
+                                            name="Description"
+                                            placeholder="Ingrese una descripcion"
+                                            class="form-textarea w-full rounded-lg border border-slate-300 bg-transparent p-2.5 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                ></textarea>
+                            </label>
+                        </div>
+                        <div class="flex justify-end space-x-2 pt-4">
+                            <button data-close-modal type="reset"
+                                    class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90">
+                                <span>Cancelar</span>
+                            </button>
+                            <button type="submit"
+                                    class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">
+                                <span>Guardar</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* Modal de Indicadores *@
+    <div id="indicatorModal"
+            class="modal shift-up fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden px-4 py-6 sm:px-5"
+            role="dialog">
+        <div class="modal-overlay absolute inset-0 bg-slate-900/60"></div>
+        <div class="modal-content scrollbar-sm relative flex flex-col overflow-y-auto rounded-lg bg-white pb-4 text-center dark:bg-navy-700">
+            <div class="col-span-12 grid lg:col-span-8">
+                <div class="card">
+                    <div class="border-b border-slate-200 p-4 dark:border-navy-500 sm:px-5">
+                        <div class="flex items-center space-x-2">
+                            <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 p-1 text-primary dark:bg-accent-light/10 dark:text-accent-light">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em"
+                                        viewBox="0 0 20 20">
+                                    <path fill="currentColor"
+                                            d="M10.505 3.117a1 1 0 0 0-1.011 0l-6.01 3.52a1 1 0 0 0 .003 1.726l6.009 3.502a1 1 0 0 0 1.007 0l6.009-3.502a1 1 0 0 0 .001-1.727zM3.07 9.65l6.438 3.622a1 1 0 0 0 .98 0l6.438-3.622a1 1 0 0 1-.415 1.26l-6.01 3.502a1 1 0 0 1-1.006 0l-6.01-3.502a1 1 0 0 1-.415-1.26m0 2.453l6.438 3.622a1 1 0 0 0 .98 0l6.438-3.622a1 1 0 0 1-.415 1.26l-6.01 3.502a1 1 0 0 1-1.006 0l-6.01-3.502a1 1 0 0 1-.415-1.26" />
+                                </svg>
+                            </div>
+                            <h4 id="modalTitleIndicator" class="text-lg font-medium text-slate-700 dark:text-navy-100">
+                                Crear Indicador
+                            </h4>
+                        </div>
+                    </div>
+                    <form action="@Url.Action("Create", "Indicators")" method="post" class="space-y-4 p-4 pb-0 max-w-xl">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" id="objectiveId" name="ObjectiveId">
+                        <input type="hidden" name="CmiId" value="@Model.CMI.Id" />
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="block text-left">
+                                <span>Nombre</span>
+
+                                <input class="form-input mt-1.5 w-full read-only:cursor-not-allowed rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                        placeholder="Ingrese el nombre del objetivo" type="text" name="Name" />
+
+                            </label>
+                             <label class="block text-left">
+                                <span>Unidad de Medida</span>
+                                <select
+                                    name="UnitMeasure"
+                                    class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
+                                >
+                                    <option value="Puntuacion">Puntuacion</option>
+                                    <option value="%">%</option>
+                                    <option value="$">$</option>
+                                    <option value="Hora (s)">Hora (s)</option>
+                                    <option value="Dia (s)">Dia (s)</option>
+                                    <option value="Minutos">Minutos</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                             <label class="block text-left">
+                                <span>Intervalo de actualización</span>
+                                <select
+                                    name="MeasurementFrequency"
+                                    class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
+                                >
+                                    <option value="Nunca">Nunca</option>
+                                    <option value="Una vez">Una vez</option>
+                                    <option value="Diariamente">Diariamente</option>
+                                    <option value="Semanalmente">Semanalmente</option>
+                                    <option value="Mensualmente">Mensualmente</option>
+                                    <option value="Trimestralmente">Trimestralmente</option>
+                                    <option value="Semestralmente">Semestralmente</option>
+                                    <option value="Anualmente">Anualmente</option>
+                                </select>
+                            </label>
+                            <label class="block text-left">
+                                <span>Agrupar por</span>
+                                <select
+                                    name="MetricTypeId"
+                                    class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
+                                >
+                                    @foreach (var metricType in Model.MetricTypes)
                                     {
-                                        <tbody class="ac [&.is-active_.ac-icon]:rotate-180">
-                                            <tr>
-                                                <td class="rounded-lg px-5 py-8 text-lg text-center" colspan="100">
-                                                    Lo sentimos, no hemos encontrado ningún registro relacionado con
-                                                    tu búsqueda.
-                                                </td>
-                                            </tr>
-                                        </tbody>
+                                        <option value="@metricType.Id">@metricType.Name</option>
                                     }
-                    </table>
-                    </div>
-                    </div>
-                    </div>
-
-                    @* Modal de Perspectiva *@
-                    <div id="perspectiveModal"
-                         class="modal shift-up fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden px-4 py-6 sm:px-5"
-                         role="dialog">
-                        <div class="modal-overlay absolute inset-0 bg-slate-900/60"></div>
-                        <div class="modal-content scrollbar-sm relative flex flex-col overflow-y-auto rounded-lg bg-white pb-4 text-center dark:bg-navy-700">
-                            <div class="col-span-12 grid lg:col-span-8">
-                                <div class="card">
-                                    <div class="border-b border-slate-200 p-4 dark:border-navy-500 sm:px-5">
-                                        <div class="flex items-center space-x-2">
-                                            <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 p-1 text-primary dark:bg-accent-light/10 dark:text-accent-light">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em"
-                                                     viewBox="0 0 20 20">
-                                                    <path fill="currentColor"
-                                                          d="M10.505 3.117a1 1 0 0 0-1.011 0l-6.01 3.52a1 1 0 0 0 .003 1.726l6.009 3.502a1 1 0 0 0 1.007 0l6.009-3.502a1 1 0 0 0 .001-1.727zM3.07 9.65l6.438 3.622a1 1 0 0 0 .98 0l6.438-3.622a1 1 0 0 1-.415 1.26l-6.01 3.502a1 1 0 0 1-1.006 0l-6.01-3.502a1 1 0 0 1-.415-1.26m0 2.453l6.438 3.622a1 1 0 0 0 .98 0l6.438-3.622a1 1 0 0 1-.415 1.26l-6.01 3.502a1 1 0 0 1-1.006 0l-6.01-3.502a1 1 0 0 1-.415-1.26" />
-                                                </svg>
-                                            </div>
-                                            <h4 class="text-lg font-medium text-slate-700 dark:text-navy-100">
-                                                Crear Perspectiva
-                                            </h4>
-                                        </div>
-                                    </div>
-                                    <form action="@Url.Action("Create", "Perspectives")" method="post" class="space-y-4 p-4 pb-0 max-w-md">
-
-                                        @Html.AntiForgeryToken()
-
-                                        @Html.Hidden("CmiId", Model.CMI.Id)
-
-                                        <div class="grid grid-cols-1 gap-4">
-                                            <label class="block text-left">
-                                                <span>Nombre</span>
-
-                                                <input class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                                       placeholder="Ingrese el nombre" type="text" name="Name" />
-
-                                            </label>
-                                        </div>
-                                        <div class="flex justify-end space-x-2 pt-4">
-                                            <button data-close-modal type="reset"
-                                                    class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90">
-                                                <span>Cancelar</span>
-                                            </button>
-                                            <button type="submit"
-                                                    class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">
-                                                <span>Guardar</span>
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
+                                </select>
+                            </label>
                         </div>
-                    </div>
-                    @* Modal de Objetivos *@
-                    <div id="objetiveModal"
-                         class="modal shift-up fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden px-4 py-6 sm:px-5"
-                         role="dialog">
-                        <div class="modal-overlay absolute inset-0 bg-slate-900/60"></div>
-                        <div class="modal-content scrollbar-sm relative flex flex-col overflow-y-auto rounded-lg bg-white pb-4 text-center dark:bg-navy-700">
-                            <div class="col-span-12 grid lg:col-span-8">
-                                <div class="card">
-                                    <div class="border-b border-slate-200 p-4 dark:border-navy-500 sm:px-5">
-                                        <div class="flex items-center space-x-2">
-                                            <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 p-1 text-primary dark:bg-accent-light/10 dark:text-accent-light">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em"
-                                                     viewBox="0 0 20 20">
-                                                    <path fill="currentColor"
-                                                          d="M10.505 3.117a1 1 0 0 0-1.011 0l-6.01 3.52a1 1 0 0 0 .003 1.726l6.009 3.502a1 1 0 0 0 1.007 0l6.009-3.502a1 1 0 0 0 .001-1.727zM3.07 9.65l6.438 3.622a1 1 0 0 0 .98 0l6.438-3.622a1 1 0 0 1-.415 1.26l-6.01 3.502a1 1 0 0 1-1.006 0l-6.01-3.502a1 1 0 0 1-.415-1.26m0 2.453l6.438 3.622a1 1 0 0 0 .98 0l6.438-3.622a1 1 0 0 1-.415 1.26l-6.01 3.502a1 1 0 0 1-1.006 0l-6.01-3.502a1 1 0 0 1-.415-1.26" />
-                                                </svg>
-                                            </div>
-                                            <h4 id="modalTitle" class="text-lg font-medium text-slate-700 dark:text-navy-100">
-                                                Crear Objetivo
-                                            </h4>
-                                        </div>
-                                    </div>
-                                    <form action="@Url.Action("Create", "Objectives")" method="post" class="space-y-4 p-4 pb-0 max-w-md">
+                        <div class="grid grid-cols-1 gap-4">
+                            <label class="block text-left">
+                                <span>Descripcion</span>
 
-                                        @Html.AntiForgeryToken()
-
-                                        <input type="hidden" id="perspectiveId" name="PerspectiveId">
-                                        <input type="hidden" name="CMIId" value="@Model.CMI.Id" />
-
-                                        <div class="grid grid-cols-2 gap-4">
-                                            <label class="block text-left">
-                                                <span>Metrica</span>
-
-                                                <input readonly class="form-input mt-1.5 w-full read-only:cursor-not-allowed rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                                       placeholder="Ingrese el tipo de metrica" type="text" value="%" name="Metric" />
-
-                                            </label>
-                                            <label class="block text-left">
-                                                <span>Peso</span>
-
-                                                <input readonly class="form-input read-only:cursor-not-allowed mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                                       placeholder="Ingrese el peso" type="text" value="100" name="Weighting" />
-
-                                            </label>
-                                        </div>
-                                        <div class="grid grid-cols-1 gap-4">
-                                            <label class="block text-left">
-                                                <span>Descripcion</span>
-
-                                                <textarea rows="4"
-                                                          name="Description"
-                                                          placeholder="Ingrese una descripcion"
-                                                          class="form-textarea w-full rounded-lg border border-slate-300 bg-transparent p-2.5 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
-                                </textarea>
-                                            </label>
-                                        </div>
-                                        <div class="flex justify-end space-x-2 pt-4">
-                                            <button data-close-modal type="reset"
-                                                    class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90">
-                                                <span>Cancelar</span>
-                                            </button>
-                                            <button type="submit"
-                                                    class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">
-                                                <span>Guardar</span>
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
+                                <textarea 
+                                    rows="4"
+                                    name="Description"
+                                    placeholder="Ingrese una descripcion"
+                                    class="form-textarea w-full rounded-lg border border-slate-300 bg-transparent p-2.5 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                ></textarea>
+                            </label>
                         </div>
-                    </div>
-                </main>
+                        <div class="flex justify-end space-x-2 pt-4">
+                            <button data-close-modal type="reset"
+                                    class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90">
+                                <span>Cancelar</span>
+                            </button>
+                            <button type="submit"
+                                    class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">
+                                <span>Guardar</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                @section Scripts {
-                    @Scripts.Render("~/Scripts/dist/perspectives.bundle.js")
-                }
+</main>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/dist/perspectives.bundle.js")
+}

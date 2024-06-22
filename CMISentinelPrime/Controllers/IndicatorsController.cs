@@ -49,18 +49,16 @@ namespace CMISentinelPrime.Controllers
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Description,MeasurementFrequency,UnitMeasure,ObjectiveId,MetricTypeId")] Indicator indicator)
+        public ActionResult Create([Bind(Include = "Id,Name,Description,MeasurementFrequency,UnitMeasure,ObjectiveId,MetricTypeId")] Indicator indicator, int CMIId)
         {
             if (ModelState.IsValid)
             {
                 db.IndicatorSet.Add(indicator);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "CMI", new { id = CMIId });
             }
 
-            ViewBag.ObjectiveId = new SelectList(db.ObjectiveSet, "Id", "Description", indicator.ObjectiveId);
-            ViewBag.MetricTypeId = new SelectList(db.MetricTypeSet, "Id", "Name", indicator.MetricTypeId);
-            return View(indicator);
+            return RedirectToAction("Index", "CMI");
         }
 
         // GET: Indicators/Edit/5
