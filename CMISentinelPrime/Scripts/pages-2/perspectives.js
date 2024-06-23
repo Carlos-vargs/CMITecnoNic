@@ -34,7 +34,15 @@ const initializePerspectivesComponents = () => {
   };
 
   window.openIndicatorDataModal = function (dispatcher) {
-    console.log({ dispatcher });
+    const title = document.getElementById("modalTitleDataIndicator");
+    const indicatorName = dispatcher.getAttribute("data-name");
+
+    title.textContent = "Editar Valores: " + indicatorName;
+
+    // Datepricker for time period CMI
+    const cmiDatePicker = document.querySelector("#indicatorDatePicker");
+
+    cmiDatePicker._datepicker = flatpickr(cmiDatePicker);
   };
 
   // Table Collapse
