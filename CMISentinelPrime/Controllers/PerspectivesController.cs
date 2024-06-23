@@ -70,7 +70,16 @@ namespace CMISentinelPrime.Controllers
             {
                 return HttpNotFound();
             }
-            return View(perspective);
+
+            var response = new
+            {
+                Perspective = new
+                {
+                    id = perspective.Id,
+                    Name = perspective.Name
+                },
+            };
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         // POST: Perspectives/Edit/5
@@ -78,15 +87,15 @@ namespace CMISentinelPrime.Controllers
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name")] Perspective perspective)
+        public ActionResult Edit([Bind(Include = "Id,Name")] Perspective perspective, int CmiId)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(perspective).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "CMI", new { id = CmiId });
             }
-            return View(perspective);
+            return RedirectToAction("Index", "CMI");
         }
 
         // GET: Perspectives/Delete/5

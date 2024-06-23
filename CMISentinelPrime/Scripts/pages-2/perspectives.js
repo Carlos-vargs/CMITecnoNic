@@ -2,6 +2,9 @@ const initializePerspectivesComponents = () => {
   // Add Modal For Perspective
   new Modal("#perspectiveModal");
 
+  // Add Modal For edit Perspective
+  new Modal("#perspectiveEditModal");
+ 
   // Add Modal For Objetives
   new Modal("#objetiveModal");
 
@@ -10,6 +13,30 @@ const initializePerspectivesComponents = () => {
 
   // Add Modal For Indicator Data
   new Modal("#indicatorDataModal");
+
+// Cargar la informacion para editar una perspectiva
+window.openPerspectiveModal = async function (dispatcher) {
+  try {
+    const title = document.getElementById("PerspectiveEditTitle");
+    const PerspectiveId = dispatcher.getAttribute("data-id");
+    const PerspectiveName = dispatcher.getAttribute("data-name");
+    const formPerspectiveName = document.querySelector("#formPerspectiveEditName");
+    const formPerspectiveId = document.querySelector("#formPerspectiveId");
+
+    title.textContent = "Editar Perspectiva: " + PerspectiveName;
+
+    if (!PerspectiveId) {
+      return
+    }
+    const response = await fetch(`https://localhost:44357/Perspectives/Edit/${PerspectiveId}`);
+    const data = await response.json();
+    formPerspectiveName.value = data?.Perspective?.Name;
+    formPerspectiveId.value = data?.Perspective?.id;
+
+  } catch (error) {
+    console.error("Error loading perspective data", error);
+  }
+};
 
   // Modal to create new objectives
   window.openObjectiveModal = function (dispatcher) {
