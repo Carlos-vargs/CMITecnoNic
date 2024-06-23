@@ -94,7 +94,18 @@ namespace CMISentinelPrime.Controllers
             {
                 return HttpNotFound();
             }
-            return View(cMI);
+
+            var response = new
+            {
+                CMI = new
+                {
+                    Id = cMI.Id,
+                    Name = cMI.Name,
+                    StarDate = cMI.TimePeriod.ToString("yyyy-MM-dd")
+                 },
+            };
+
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         // POST: CMI/Edit/5

@@ -2,6 +2,36 @@ const initializeCMIComponents = () => {
   // Modal para crear un CMI
   new Modal("#cmiModal");
 
+  // Modal para editar un CMI
+  new Modal("#cmiEditModal");
+
+  // Cargar la informacion para editar un cuadro de mando
+  window.openCMIModal = async function (dispatcher) {
+    try {
+      const title = document.getElementById("cmiEditTitle");
+      const CMIId = dispatcher.getAttribute("data-id");
+      const CMIName = dispatcher.getAttribute("data-name");
+      const formCMIName = document.querySelector("#formCMIEditName");
+      const cmiEditDatePicker = document.querySelector("#formCMIEditDate");
+      const formCMIId = document.querySelector("#formCMIId");
+
+      title.textContent = "Editar cuadro de mando: " + CMIName;
+
+      const response = await fetch(`https://localhost:44357/CMI/Edit/${CMIId}`);
+
+      const data = await response.json();
+
+      formCMIName.value = data?.CMI?.Name;
+      formCMIId.value = data?.CMI?.Id;
+
+      cmiEditDatePicker._datepicker = flatpickr(cmiEditDatePicker, {
+        defaultDate: data?.CMI?.StarDate,
+      });
+    } catch (error) {
+      console.error("Error loading cmi data", error);
+    }
+  };
+
   // Datepricker for time period CMI
   const cmiDatePicker = document.querySelector("#cmiDatePicker");
 

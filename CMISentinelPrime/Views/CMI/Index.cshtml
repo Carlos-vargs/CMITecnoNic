@@ -36,73 +36,6 @@
 
     </div>
 
-    @* Modal para crear CMI *@
-    <div id="cmiModal"
-         class="modal shift-up fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden px-4 py-6 sm:px-5"
-         role="dialog">
-        <div class="modal-overlay absolute inset-0 bg-slate-900/60"></div>
-        <div class="modal-content scrollbar-sm relative flex flex-col overflow-y-auto rounded-lg bg-white pb-4 text-center dark:bg-navy-700">
-            <div class="col-span-12 grid lg:col-span-8">
-                <div class="card">
-                    <div class="border-b border-slate-200 p-4 dark:border-navy-500 sm:px-5">
-                        <div class="flex items-center space-x-2">
-                            <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 p-1 text-primary dark:bg-accent-light/10 dark:text-accent-light">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em"
-                                     viewBox="0 0 20 20">
-                                    <path fill="currentColor"
-                                          d="M10.505 3.117a1 1 0 0 0-1.011 0l-6.01 3.52a1 1 0 0 0 .003 1.726l6.009 3.502a1 1 0 0 0 1.007 0l6.009-3.502a1 1 0 0 0 .001-1.727zM3.07 9.65l6.438 3.622a1 1 0 0 0 .98 0l6.438-3.622a1 1 0 0 1-.415 1.26l-6.01 3.502a1 1 0 0 1-1.006 0l-6.01-3.502a1 1 0 0 1-.415-1.26m0 2.453l6.438 3.622a1 1 0 0 0 .98 0l6.438-3.622a1 1 0 0 1-.415 1.26l-6.01 3.502a1 1 0 0 1-1.006 0l-6.01-3.502a1 1 0 0 1-.415-1.26" />
-                                </svg>
-                            </div>
-                            <h4 class="text-lg font-medium text-slate-700 dark:text-navy-100">
-                                Crear Cuadro de Mando
-                            </h4>
-                        </div>
-                    </div>
-                    <form action="@Url.Action("Create", "CMI")" method="post" class="space-y-4 p-4 pb-0 max-w-md">
-
-                        @Html.AntiForgeryToken()
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <label class="block text-left">
-                                <span>Nombre</span>
-
-                                <input class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                       placeholder="Ingrese el nombre" type="text" name="Name" />
-
-                            </label>
-                            <div class="text-left">
-                                <span>Fecha de Inicio</span>
-                                <label class="relative flex mt-1.5">
-                                    <input id="cmiDatePicker" name="TimePeriod"
-                                           class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                           placeholder="Elige una Fecha" type="text" />
-                                    <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                             class="h-5 w-5 transition-colors duration-200" fill="none"
-                                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="flex justify-end space-x-2 pt-4">
-                            <button data-close-modal type="reset"
-                                    class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90">
-                                <span>Cancelar</span>
-                            </button>
-                            <button type="submit"
-                                    class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">
-                                <span>Guardar</span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="tab-content is-active mt-5">
         <div class="card pb-4">
 
@@ -185,9 +118,13 @@
                                                                     <span> Ver</span>
                                                                 </a>
                                                             </li>
-                                                            <li>
-                                                                <a href="#"
-                                                                   class="flex h-8 items-center space-x-3 px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">
+                                                            <li 
+                                                            data-toggle="modal"
+                                                            data-id="@item.Id" data-name="@item.Name"
+                                                            data-target="#cmiEditModal"
+                                                            onclick="openCMIModal(this)"
+                                                             class="flex h-8 items-center cursor-pointer space-x-3 px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">
+                                                               
                                                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5"
                                                                          fill="none" viewBox="0 0 24 24" stroke="currentColor"
                                                                          stroke-width="1.5">
@@ -195,7 +132,7 @@
                                                                               d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                                                     </svg>
                                                                     <span> Editar</span>
-                                                                </a>
+                                                                
                                                             </li>
                                                             <li>
                                                                 <a href="#"
@@ -247,6 +184,142 @@
                             }
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Modal para crear CMI *@
+    <div id="cmiModal"
+         class="modal shift-up fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden px-4 py-6 sm:px-5"
+         role="dialog">
+        <div class="modal-overlay absolute inset-0 bg-slate-900/60"></div>
+        <div class="modal-content scrollbar-sm relative flex flex-col overflow-y-auto rounded-lg bg-white pb-4 text-center dark:bg-navy-700">
+            <div class="col-span-12 grid lg:col-span-8">
+                <div class="card">
+                    <div class="border-b border-slate-200 p-4 dark:border-navy-500 sm:px-5">
+                        <div class="flex items-center space-x-2">
+                            <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 p-1 text-primary dark:bg-accent-light/10 dark:text-accent-light">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em"
+                                     viewBox="0 0 20 20">
+                                    <path fill="currentColor"
+                                          d="M10.505 3.117a1 1 0 0 0-1.011 0l-6.01 3.52a1 1 0 0 0 .003 1.726l6.009 3.502a1 1 0 0 0 1.007 0l6.009-3.502a1 1 0 0 0 .001-1.727zM3.07 9.65l6.438 3.622a1 1 0 0 0 .98 0l6.438-3.622a1 1 0 0 1-.415 1.26l-6.01 3.502a1 1 0 0 1-1.006 0l-6.01-3.502a1 1 0 0 1-.415-1.26m0 2.453l6.438 3.622a1 1 0 0 0 .98 0l6.438-3.622a1 1 0 0 1-.415 1.26l-6.01 3.502a1 1 0 0 1-1.006 0l-6.01-3.502a1 1 0 0 1-.415-1.26" />
+                                </svg>
+                            </div>
+                            <h4 class="text-lg font-medium text-slate-700 dark:text-navy-100">
+                                Crear Cuadro de Mando
+                            </h4>
+                        </div>
+                    </div>
+                    <form action="@Url.Action("Create", "CMI")" method="post" class="space-y-4 p-4 pb-0 max-w-md">
+
+                        @Html.AntiForgeryToken()
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="block text-left">
+                                <span>Nombre</span>
+
+                                <input class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                       placeholder="Ingrese el nombre" type="text" name="Name" />
+
+                            </label>
+                            <div class="text-left">
+                                <span>Fecha de Inicio</span>
+                                <label class="relative flex mt-1.5">
+                                    <input id="cmiDatePicker" name="TimePeriod"
+                                           class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                           placeholder="Elige una Fecha" type="text" />
+                                    <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                             class="h-5 w-5 transition-colors duration-200" fill="none"
+                                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="flex justify-end space-x-2 pt-4">
+                            <button data-close-modal type="reset"
+                                    class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90">
+                                <span>Cancelar</span>
+                            </button>
+                            <button type="submit"
+                                    class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">
+                                <span>Guardar</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+      @* Modal para editar CMI *@
+    <div id="cmiEditModal"
+         class="modal shift-up fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden px-4 py-6 sm:px-5"
+         role="dialog">
+        <div class="modal-overlay absolute inset-0 bg-slate-900/60"></div>
+        <div class="modal-content scrollbar-sm relative flex flex-col overflow-y-auto rounded-lg bg-white pb-4 text-center dark:bg-navy-700">
+            <div class="col-span-12 grid lg:col-span-8">
+                <div class="card">
+                    <div class="border-b border-slate-200 p-4 dark:border-navy-500 sm:px-5">
+                        <div class="flex items-center space-x-2">
+                            <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 p-1 text-primary dark:bg-accent-light/10 dark:text-accent-light">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em"
+                                     viewBox="0 0 20 20">
+                                    <path fill="currentColor"
+                                          d="M10.505 3.117a1 1 0 0 0-1.011 0l-6.01 3.52a1 1 0 0 0 .003 1.726l6.009 3.502a1 1 0 0 0 1.007 0l6.009-3.502a1 1 0 0 0 .001-1.727zM3.07 9.65l6.438 3.622a1 1 0 0 0 .98 0l6.438-3.622a1 1 0 0 1-.415 1.26l-6.01 3.502a1 1 0 0 1-1.006 0l-6.01-3.502a1 1 0 0 1-.415-1.26m0 2.453l6.438 3.622a1 1 0 0 0 .98 0l6.438-3.622a1 1 0 0 1-.415 1.26l-6.01 3.502a1 1 0 0 1-1.006 0l-6.01-3.502a1 1 0 0 1-.415-1.26" />
+                                </svg>
+                            </div>
+                            <h4 id="cmiEditTitle" class="text-lg font-medium text-slate-700 dark:text-navy-100">
+                                Editar cuadro de mando
+                            </h4>
+                        </div>
+                    </div>
+                    <form action="@Url.Action("Edit", "CMI")" method="post" class="space-y-4 p-4 pb-0 max-w-md">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" name="Id" id="formCMIId">
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="block text-left">
+                                <span>Nombre</span>
+
+                                <input id="formCMIEditName" class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                       placeholder="Ingrese el nombre" type="text" name="Name" />
+
+                            </label>
+                            <div class="text-left">
+                                <span>Fecha de Inicio</span>
+                                <label class="relative flex mt-1.5">
+                                    <input id="formCMIEditDate" name="TimePeriod"
+                                           class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                           placeholder="Elige una Fecha" type="text" />
+                                    <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                             class="h-5 w-5 transition-colors duration-200" fill="none"
+                                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="flex justify-end space-x-2 pt-4">
+                            <button data-close-modal type="reset"
+                                    class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90">
+                                <span>Cancelar</span>
+                            </button>
+                            <button type="submit"
+                                    class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">
+                                <span>Guardar</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
