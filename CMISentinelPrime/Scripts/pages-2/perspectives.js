@@ -33,6 +33,10 @@ const initializePerspectivesComponents = () => {
     inputId.value = objectiveId;
   };
 
+  window.openIndicatorDataModal = function (dispatcher) {
+    console.log({ dispatcher });
+  };
+
   // Table Collapse
   window.tableCollapse = new Accordion(
     document.querySelector("#table-collapse"),

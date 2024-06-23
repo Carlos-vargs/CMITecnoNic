@@ -434,7 +434,6 @@
     <Content Include="Views\MetricTypes\Index.cshtml" />
     <Content Include="Views\Indicators\Create.cshtml" />
     <Content Include="Views\Indicators\Delete.cshtml" />
-    <Content Include="Views\Indicators\Details.cshtml" />
     <Content Include="Views\Indicators\Edit.cshtml" />
     <Content Include="Views\Indicators\Index.cshtml" />
     <Content Include="Views\DataIndicators\Create.cshtml" />

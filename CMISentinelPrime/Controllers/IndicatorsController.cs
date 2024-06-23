@@ -28,12 +28,48 @@ namespace CMISentinelPrime.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Indicator indicator = db.IndicatorSet.Find(id);
+            Indicator indicator = db.IndicatorSet
+                .Include(i => i.MetricType)
+                .Include(i => i.DataIndicator)  
+                .Include(i => i.Target)         
+                .FirstOrDefault(i => i.Id == id);
+
             if (indicator == null)
             {
                 return HttpNotFound();
             }
-            return View(indicator);
+
+            var response = new
+            {
+                Indicator = new
+                {
+                    Id = indicator.Id,
+                    Name = indicator.Name,
+                    Description = indicator.Description,
+                    MeasurementFrequency = indicator.MeasurementFrequency,
+                    UnitMeasure = indicator.UnitMeasure
+                },
+                MetricType = new
+                {
+                    Id = indicator.MetricType.Id,
+                    Name = indicator.MetricType.Name
+                },
+                DataIndicators = indicator.DataIndicator.Select(di => new
+                {
+                    Id = di.Id,
+                    Value = di.Value,
+                    Date = di.Date
+                }),
+                Targets = indicator.Target.Select(t => new
+                {
+                    Id = t.Id,
+                    Description = t.Description,
+                    ExpectedValue = t.ExpectedValue,
+                    DeadlineDate = t.DeadlineDate
+                })
+            };
+
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Indicators/Create
