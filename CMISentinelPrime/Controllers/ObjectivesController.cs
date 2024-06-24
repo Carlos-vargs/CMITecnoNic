@@ -73,11 +73,18 @@ namespace CMISentinelPrime.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.CMIId = new SelectList(db.CMISet, "Id", "Name", objective.CMIId);
-            ViewBag.PerspectiveId = new SelectList(db.PerspectiveSet, "Id", "Name", objective.PerspectiveId);
-            return View(objective);
-        }
 
+            var response = new
+            {
+                Objective = new
+                {
+                    id = objective.Id,
+                    Description = objective.Description,
+                    PerspectiveId = objective.PerspectiveId
+                },
+            };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
         // POST: Objectives/Edit/5
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
@@ -85,16 +92,41 @@ namespace CMISentinelPrime.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Description,Metric,Weighting,CMIId,PerspectiveId")] Objective objective)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(objective).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(objective).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Details", "CMI", new { id = objective.CMIId });
+                }
+                else
+                {
+                    // Agregar algún tipo de registro para ModelState no válido
+                    foreach (var state in ModelState)
+                    {
+                        foreach (var error in state.Value.Errors)
+                        {
+                            // Aquí puedes usar tu propio mecanismo de logging
+                            System.Diagnostics.Debug.WriteLine($"Error en {state.Key}: {error.ErrorMessage}");
+                        }
+                    }
+                }
             }
-            ViewBag.CMIId = new SelectList(db.CMISet, "Id", "Name", objective.CMIId);
-            ViewBag.PerspectiveId = new SelectList(db.PerspectiveSet, "Id", "Name", objective.PerspectiveId);
-            return View(objective);
+            catch (Exception ex)
+            {
+                // Registrar la excepción
+                System.Diagnostics.Debug.WriteLine("Excepción capturada: " + ex.Message);
+                // Si deseas, puedes agregar más información del stack trace
+                System.Diagnostics.Debug.WriteLine("StackTrace: " + ex.StackTrace);
+
+                // También podrías agregar una notificación al usuario sobre el error
+                // TempData["ErrorMessage"] = "Ocurrió un error al guardar los cambios.";
+            }
+
+            return RedirectToAction("Details", "CMI", new { id = objective.CMIId });
         }
+
 
         // GET: Objectives/Delete/5
         public ActionResult Delete(int? id)
