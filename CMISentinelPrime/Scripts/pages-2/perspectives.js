@@ -14,6 +14,9 @@ const initializePerspectivesComponents = () => {
   // Add Modal For Indicators
   new Modal("#indicatorModal");
 
+  // Modal For edit Indicators
+  new Modal("#indicatorEditModal");
+
   // Add Modal For Indicator Data
   new Modal("#indicatorDataModal");
 
@@ -71,6 +74,50 @@ const initializePerspectivesComponents = () => {
       formObjetiveName.value = data?.Objective?.Description;
       formObjectiveId.value = data?.Objective?.id;
       formObjectiveParentId.value = data?.Objective?.PerspectiveId;
+    } catch (error) {
+      console.error("Error loading perspective data", error);
+    }
+  };
+
+  // Cargar la informacion para editar un indicador
+  window.openIndicadorEditModal = async function (dispatcher) {
+    try {
+      const title = document.getElementById("TitleEditIndicator");
+      const IndicatorId = dispatcher.getAttribute("data-id");
+      const IndicatorName = dispatcher.getAttribute("data-name");
+      const formIndicatorId = document.querySelector("#formIndicatorId");
+      const formObjectivIndicatorId = document.querySelector(
+        "#formObjectivIndicatorId"
+      );
+      const formMetricId = document.querySelector("#formMetricId");
+      const formIndicatorName = document.querySelector("#formIndicatorName");
+      const formIndicatorDescription = document.querySelector(
+        "#formIndicatorDescription"
+      );
+      const formMeasurementFrequency = document.querySelector(
+        "#formMeasurementFrequency"
+      );
+      const formUnitMeasure = document.querySelector("#formUnitMeasure");
+
+      title.textContent = "Editar indicator: " + IndicatorName;
+
+      if (!IndicatorId) {
+        return;
+      }
+
+      const response = await fetch(
+        `https://localhost:44357/Indicators/Edit/${IndicatorId}`
+      );
+      const data = await response.json();
+
+      formObjectivIndicatorId.value = data?.Indicator?.ObjectiveParentId;
+      formIndicatorName.value = data?.Indicator?.Name;
+      formIndicatorId.value = data?.Indicator?.Id;
+      formMeasurementFrequency.value = data?.Indicator?.MeasurementFrequency;
+      formUnitMeasure.value = data?.Indicator?.UnitMeasure;
+      formIndicatorDescription.value = data?.Indicator?.Description;
+      formMetricId.value = data?.MetricType?.Id;
+      
     } catch (error) {
       console.error("Error loading perspective data", error);
     }

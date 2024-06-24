@@ -30,8 +30,8 @@ namespace CMISentinelPrime.Controllers
             }
             Indicator indicator = db.IndicatorSet
                 .Include(i => i.MetricType)
-                .Include(i => i.DataIndicator)  
-                .Include(i => i.Target)         
+                .Include(i => i.DataIndicator)
+                .Include(i => i.Target)
                 .FirstOrDefault(i => i.Id == id);
 
             if (indicator == null)
@@ -100,36 +100,89 @@ namespace CMISentinelPrime.Controllers
         // GET: Indicators/Edit/5
         public ActionResult Edit(int? id)
         {
+            // Primero, verificamos si el ID es nulo. Si es así, devolvemos un error de solicitud incorrecta.
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Indicator indicator = db.IndicatorSet.Find(id);
+
+            // Buscamos el indicador en la base de datos incluyendo las relaciones necesarias.
+            Indicator indicator = db.IndicatorSet
+               .Include(i => i.MetricType)
+               .Include(i => i.DataIndicator)
+               .Include(i => i.Target)
+               .FirstOrDefault(i => i.Id == id);
+
+            // Si no se encuentra el indicador, devolvemos un error de no encontrado.
             if (indicator == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ObjectiveId = new SelectList(db.ObjectiveSet, "Id", "Description", indicator.ObjectiveId);
-            ViewBag.MetricTypeId = new SelectList(db.MetricTypeSet, "Id", "Name", indicator.MetricTypeId);
-            return View(indicator);
+
+            // Construimos la respuesta en formato JSON.
+            var response = new
+            {
+                Indicator = new
+                {
+                    Id = indicator.Id,
+                    Name = indicator.Name,
+                    Description = indicator.Description,
+                    MeasurementFrequency = indicator.MeasurementFrequency,
+                    UnitMeasure = indicator.UnitMeasure,
+                    ObjectiveParentId = indicator.ObjectiveId
+                },
+                MetricType = new
+                {
+                    Id = indicator.MetricType.Id,
+                    Name = indicator.MetricType.Name
+                }, 
+            };
+
+            // Devolvemos la respuesta en formato JSON.
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
+
 
         // POST: Indicators/Edit/5
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Description,MeasurementFrequency,UnitMeasure,ObjectiveId,MetricTypeId")] Indicator indicator)
+        public ActionResult Edit([Bind(Include = "Id,Name,Description,MeasurementFrequency,UnitMeasure,ObjectiveId,MetricTypeId")] Indicator indicator, int CmiId)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(indicator).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(indicator).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Details", "CMI", new { id = CmiId });
+                }
+                else
+                {
+                    // Log errors for invalid ModelState
+                    foreach (var state in ModelState)
+                    {
+                        foreach (var error in state.Value.Errors)
+                        {
+                            // Your custom logging mechanism
+                            System.Diagnostics.Debug.WriteLine($"Error in {state.Key}: {error.ErrorMessage}");
+                        }
+                    }
+                }
             }
-            ViewBag.ObjectiveId = new SelectList(db.ObjectiveSet, "Id", "Description", indicator.ObjectiveId);
-            ViewBag.MetricTypeId = new SelectList(db.MetricTypeSet, "Id", "Name", indicator.MetricTypeId);
-            return View(indicator);
+            catch (Exception ex)
+            {
+                // Log the exception
+                System.Diagnostics.Debug.WriteLine("Exception caught: " + ex.Message);
+                // Optional: Log additional stack trace information
+                System.Diagnostics.Debug.WriteLine("StackTrace: " + ex.StackTrace);
+
+                // Optional: Add a notification to the user about the error
+                // TempData["ErrorMessage"] = "An error occurred while saving changes.";
+            }
+
+            return RedirectToAction("Details", "CMI", new { id = CmiId });
         }
 
         // GET: Indicators/Delete/5

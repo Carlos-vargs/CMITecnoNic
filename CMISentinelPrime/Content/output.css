@@ -466,8 +466,14 @@ video {
 .pointer-events-auto {
   pointer-events: auto;
 }
+.\!visible {
+  visibility: visible !important;
+}
 .visible {
   visibility: visible;
+}
+.invisible {
+  visibility: hidden;
 }
 .collapse {
   visibility: collapse;
@@ -647,9 +653,6 @@ video {
 }
 .-mb-0 {
   margin-bottom: -0px;
-}
-.-mb-0\.5 {
-  margin-bottom: -0.125rem;
 }
 .-ml-1 {
   margin-left: -0.25rem;
@@ -1051,9 +1054,6 @@ video {
 .min-w-\[2rem\] {
   min-width: 2rem;
 }
-.min-w-\[7rem\] {
-  min-width: 7rem;
-}
 .min-w-full {
   min-width: 100%;
 }
@@ -1394,6 +1394,9 @@ video {
   --tw-space-y-reverse: 0;
   margin-top: calc(2.25rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(2.25rem * var(--tw-space-y-reverse));
+}
+.space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
 }
 .divide-x > :not([hidden]) ~ :not([hidden]) {
   --tw-divide-x-reverse: 0;
@@ -1953,6 +1956,9 @@ video {
 }
 .p-2 {
   padding: 0.5rem;
+}
+.p-2\.5 {
+  padding: 0.625rem;
 }
 .p-3 {
   padding: 0.75rem;
@@ -2585,6 +2591,9 @@ video {
   --tw-invert: invert(100%);
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
+.\!filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow) !important;
+}
 .filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
@@ -2667,6 +2676,12 @@ video {
 .placeholder\:text-slate-500::placeholder {
   color: #64748b;
 }
+.read-only\:cursor-not-allowed:-moz-read-only {
+  cursor: not-allowed;
+}
+.read-only\:cursor-not-allowed:read-only {
+  cursor: not-allowed;
+}
 .hover\:rotate-\[360deg\]:hover {
   --tw-rotate: 360deg;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
@@ -2688,9 +2703,6 @@ video {
 }
 .hover\:bg-slate-100:hover {
   background-color: #f1f5f9;
-}
-.hover\:bg-slate-150:hover {
-  background-color: #E9EEF5;
 }
 .hover\:bg-slate-200:hover {
   background-color: #e2e8f0;
@@ -2731,9 +2743,6 @@ video {
 .focus\:bg-slate-100:focus {
   background-color: #f1f5f9;
 }
-.focus\:bg-slate-150:focus {
-  background-color: #E9EEF5;
-}
 .focus\:bg-slate-200:focus {
   background-color: #e2e8f0;
 }
@@ -2772,9 +2781,6 @@ video {
 }
 .active\:bg-primary\/25:active {
   background-color: rgb(79 70 229 / 0.25);
-}
-.active\:bg-slate-150\/80:active {
-  background-color: rgb(233 238 245 / 0.8);
 }
 .active\:bg-slate-200\/80:active {
   background-color: rgb(226 232 240 / 0.8);
@@ -2839,9 +2845,6 @@ video {
     margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
     margin-bottom: calc(0px * var(--tw-space-y-reverse));
   }
-  .sm\:p-5 {
-    padding: 1.25rem;
-  }
   .sm\:px-5 {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
@@ -2881,10 +2884,6 @@ video {
   .lg\:px-5 {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
-  }
-  .lg\:py-6 {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
   }
   .lg\:pr-5 {
     padding-right: 1.25rem;
@@ -3024,9 +3023,6 @@ video {
   .dark\:hover\:bg-navy-450:hover {
     background-color: #465675;
   }
-  .dark\:hover\:bg-navy-500:hover {
-    background-color: #384766;
-  }
   .dark\:hover\:bg-navy-600:hover {
     background-color: #313E59;
   }
@@ -3060,9 +3056,6 @@ video {
   .dark\:focus\:bg-navy-450:focus {
     background-color: #465675;
   }
-  .dark\:focus\:bg-navy-500:focus {
-    background-color: #384766;
-  }
   .dark\:focus\:bg-navy-600:focus {
     background-color: #313E59;
   }
@@ -3089,9 +3082,6 @@ video {
   }
   .dark\:active\:bg-navy-450\/90:active {
     background-color: rgb(70 86 117 / 0.9);
-  }
-  .dark\:active\:bg-navy-500\/90:active {
-    background-color: rgb(56 71 102 / 0.9);
   }
   .group:hover .dark\:group-hover\:text-accent-light {
     color: #818cf8;
