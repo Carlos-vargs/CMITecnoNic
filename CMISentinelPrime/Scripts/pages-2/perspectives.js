@@ -4,74 +4,77 @@ const initializePerspectivesComponents = () => {
 
   // Modal For edit Perspective
   new Modal("#perspectiveEditModal");
- 
+
   // Add Modal For Objetives
   new Modal("#objetiveModal");
-  
+
   // Modal For edit Objetives
   new Modal("#objetiveEditModal");
- 
+
   // Add Modal For Indicators
   new Modal("#indicatorModal");
 
   // Add Modal For Indicator Data
   new Modal("#indicatorDataModal");
 
-// Cargar la informacion para editar una perspectiva
-window.openPerspectiveModal = async function (dispatcher) {
-  try {
-    const title = document.getElementById("PerspectiveEditTitle");
-    const PerspectiveId = dispatcher.getAttribute("data-id");
-    const PerspectiveName = dispatcher.getAttribute("data-name");
-    const formPerspectiveName = document.querySelector("#formPerspectiveEditName");
-    const formPerspectiveId = document.querySelector("#formPerspectiveId");
+  // Cargar la informacion para editar una perspectiva
+  window.openPerspectiveModal = async function (dispatcher) {
+    try {
+      const title = document.getElementById("PerspectiveEditTitle");
+      const PerspectiveId = dispatcher.getAttribute("data-id");
+      const PerspectiveName = dispatcher.getAttribute("data-name");
+      const formPerspectiveName = document.querySelector(
+        "#formPerspectiveEditName"
+      );
+      const formPerspectiveId = document.querySelector("#formPerspectiveId");
 
-    title.textContent = "Editar Perspectiva: " + PerspectiveName;
+      title.textContent = "Editar Perspectiva: " + PerspectiveName;
 
-    if (!PerspectiveId) {
-      return
+      if (!PerspectiveId) {
+        return;
+      }
+      const response = await fetch(
+        `https://localhost:44357/Perspectives/Edit/${PerspectiveId}`
+      );
+      const data = await response.json();
+      formPerspectiveName.value = data?.Perspective?.Name;
+      formPerspectiveId.value = data?.Perspective?.id;
+    } catch (error) {
+      console.error("Error loading perspective data", error);
     }
-    const response = await fetch(`https://localhost:44357/Perspectives/Edit/${PerspectiveId}`);
-    const data = await response.json();
-    formPerspectiveName.value = data?.Perspective?.Name;
-    formPerspectiveId.value = data?.Perspective?.id;
-
-  } catch (error) {
-    console.error("Error loading perspective data", error);
-  }
-};
+  };
 
   // Cargar la informacion para editar un objetivo
   window.openObjetiveEditModal = async function (dispatcher) {
     try {
       const title = document.getElementById("objectiveEditTitle");
       const objectiveId = dispatcher.getAttribute("data-id");
-      const perspectivaId = dispatcher.getAttribute("data-id-perspectiva");
       const objetiveName = dispatcher.getAttribute("data-name");
       const formObjetiveName = document.querySelector("#formObjetiveEditName");
-      const formObjetiveId = document.querySelector("#formObjetiveId");
-      const formPerspectiveId = document.querySelector("#formPerspectiveId");
-  
+      const formObjectiveId = document.querySelector("#formObjectiveId");
+      const formObjectiveParentId = document.querySelector(
+        "#formObjectiveParentId"
+      );
+
       title.textContent = "Editar Perspectiva: " + objetiveName;
-  
+
       if (!objectiveId) {
-        return
+        return;
       }
-      const response = await fetch(`https://localhost:44357/Objectives/Edit/${objectiveId}`);
+      const response = await fetch(
+        `https://localhost:44357/Objectives/Edit/${objectiveId}`
+      );
       const data = await response.json();
-  
-      console.log({data})
-  
+
+      console.log({ data });
+
       formObjetiveName.value = data?.Objective?.Description;
-      formObjetiveId.value = data?.Objective?.id;
-      formPerspectiveId.value = perspectivaId;
-  
-  
+      formObjectiveId.value = data?.Objective?.id;
+      formObjectiveParentId.value = data?.Objective?.PerspectiveId;
     } catch (error) {
       console.error("Error loading perspective data", error);
     }
   };
-  
 
   // Modal to create new objectives
   window.openObjectiveModal = function (dispatcher) {

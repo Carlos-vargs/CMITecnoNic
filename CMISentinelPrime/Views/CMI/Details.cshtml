@@ -271,8 +271,8 @@
                                                                                                 </li>
                                                                                                 <li                                     
                                                                                                     data-toggle="modal"
-                                                                                                    data-id="@objective.Id" data-name="@objective.Description"
-                                                                                                    data-id-perspectiva="@perspective.Id"
+                                                                                                    data-id="@objective.Id" 
+                                                                                                    data-name="@objective.Description"
                                                                                                     data-target="#objetiveEditModal"
                                                                                                     onclick="openObjetiveEditModal(this)"
                                                                                                     class="flex h-8 items-center cursor-pointer space-x-3 px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">
@@ -695,8 +695,8 @@
                         @Html.AntiForgeryToken()
 
                       
-                         <input type="hidden" name="Id" id="formObjetiveId">
-                        <input type="hidden"  name="PerspectiveId" id="formPerspectiveId"> 
+                        <input type="hidden" name="Id" id="formObjectiveId">
+                        <input type="hidden" name="PerspectiveId" id="formObjectiveParentId"> 
                         <input type="hidden" name="CMIId" value="@Model.CMI.Id" />
 
                         
