@@ -56,7 +56,7 @@ const initializePerspectivesComponents = () => {
         "#formObjectiveParentId"
       );
 
-      title.textContent = "Editar Perspectiva: " + objetiveName;
+      title.textContent = "Editar objetivo: " + objetiveName;
 
       if (!objectiveId) {
         return;
