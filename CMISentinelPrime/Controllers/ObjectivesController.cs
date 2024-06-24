@@ -102,12 +102,10 @@ namespace CMISentinelPrime.Controllers
                 }
                 else
                 {
-                    // Agregar algún tipo de registro para ModelState no válido
                     foreach (var state in ModelState)
                     {
                         foreach (var error in state.Value.Errors)
                         {
-                            // Aquí puedes usar tu propio mecanismo de logging
                             System.Diagnostics.Debug.WriteLine($"Error en {state.Key}: {error.ErrorMessage}");
                         }
                     }
@@ -115,13 +113,9 @@ namespace CMISentinelPrime.Controllers
             }
             catch (Exception ex)
             {
-                // Registrar la excepción
                 System.Diagnostics.Debug.WriteLine("Excepción capturada: " + ex.Message);
-                // Si deseas, puedes agregar más información del stack trace
                 System.Diagnostics.Debug.WriteLine("StackTrace: " + ex.StackTrace);
 
-                // También podrías agregar una notificación al usuario sobre el error
-                // TempData["ErrorMessage"] = "Ocurrió un error al guardar los cambios.";
             }
 
             return RedirectToAction("Details", "CMI", new { id = objective.CMIId });

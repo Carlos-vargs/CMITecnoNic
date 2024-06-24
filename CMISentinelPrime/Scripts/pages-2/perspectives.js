@@ -99,7 +99,7 @@ const initializePerspectivesComponents = () => {
       );
       const formUnitMeasure = document.querySelector("#formUnitMeasure");
 
-      title.textContent = "Editar indicator: " + IndicatorName;
+      title.textContent = "Editar indicador: " + IndicatorName;
 
       if (!IndicatorId) {
         return;

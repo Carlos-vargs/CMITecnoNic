@@ -100,26 +100,22 @@ namespace CMISentinelPrime.Controllers
         // GET: Indicators/Edit/5
         public ActionResult Edit(int? id)
         {
-            // Primero, verificamos si el ID es nulo. Si es así, devolvemos un error de solicitud incorrecta.
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            // Buscamos el indicador en la base de datos incluyendo las relaciones necesarias.
             Indicator indicator = db.IndicatorSet
                .Include(i => i.MetricType)
                .Include(i => i.DataIndicator)
                .Include(i => i.Target)
                .FirstOrDefault(i => i.Id == id);
 
-            // Si no se encuentra el indicador, devolvemos un error de no encontrado.
             if (indicator == null)
             {
                 return HttpNotFound();
             }
 
-            // Construimos la respuesta en formato JSON.
             var response = new
             {
                 Indicator = new
@@ -138,7 +134,6 @@ namespace CMISentinelPrime.Controllers
                 }, 
             };
 
-            // Devolvemos la respuesta en formato JSON.
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
@@ -165,7 +160,7 @@ namespace CMISentinelPrime.Controllers
                     {
                         foreach (var error in state.Value.Errors)
                         {
-                            // Your custom logging mechanism
+                            //  custom logging mechanism
                             System.Diagnostics.Debug.WriteLine($"Error in {state.Key}: {error.ErrorMessage}");
                         }
                     }
@@ -178,8 +173,6 @@ namespace CMISentinelPrime.Controllers
                 // Optional: Log additional stack trace information
                 System.Diagnostics.Debug.WriteLine("StackTrace: " + ex.StackTrace);
 
-                // Optional: Add a notification to the user about the error
-                // TempData["ErrorMessage"] = "An error occurred while saving changes.";
             }
 
             return RedirectToAction("Details", "CMI", new { id = CmiId });
