@@ -1025,7 +1025,7 @@
                             <div class="text-left">
                                 <span>Fecha Limite</span>
                                 <label class="relative flex mt-1.5">
-                                    <input id="indicatorDatePicker" name="TimePeriod"
+                                    <input id="indicatorDeadlinePicker" name="DeadlineDate"
                                            class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                                            placeholder="Elige una Fecha" type="text" />
                                     <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
@@ -1043,6 +1043,7 @@
                             <label class="block text-left">
                                 <span>Agrupar por</span>
                                 <select
+                                    id="formIndicatorDataMetricId"
                                     name="MetricTypeId"
                                     class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
                                 >
@@ -1051,6 +1052,17 @@
                                         <option value="@metricType.Id">@metricType.Name</option>
                                     }
                                 </select>
+                            </label>
+                            <label class="block text-left">
+                                <span>Dia de Inicio</span>
+                                <input 
+                                class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                placeholder="Ingrese el Dia de Inicio" 
+                                id="initialDayIndicator"
+                                type="number"
+                                min="0"
+                                max="31" 
+                                />
                             </label>
                         </div>
                         <div class="grid grid-cols-1 gap-4">

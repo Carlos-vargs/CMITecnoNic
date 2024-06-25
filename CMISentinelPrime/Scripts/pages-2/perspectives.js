@@ -147,13 +147,11 @@ const initializePerspectivesComponents = () => {
   window.openIndicatorDataModal = function (dispatcher) {
     const title = document.getElementById("modalTitleDataIndicator");
     const indicatorName = dispatcher.getAttribute("data-name");
+    const indicatorId = dispatcher.getAttribute("data-id");
 
     title.textContent = "Editar Valores: " + indicatorName;
 
-    // Datepricker for time period CMI
-    const cmiDatePicker = document.querySelector("#indicatorDatePicker");
-
-    cmiDatePicker._datepicker = flatpickr(cmiDatePicker);
+    setupDateTableUpdater(indicatorId);
   };
 
   // Table Collapse
@@ -313,13 +311,127 @@ const initializeDropdownPoppers = (
   initPoppers();
 };
 
-function setupDateTableUpdater() {
+function setupDateTableUpdater(indicatorId = null) {
+  if (!indicatorId) {
+    return;
+  }
+
   const updateIntervalSelect = document.getElementById(
     "measurementFrequencySelect"
   );
-  const startDatePicker = document.getElementById("indicatorDatePicker");
+  const deadlineDatePicker = document.getElementById("indicatorDeadlinePicker");
   const tableBody = document.querySelector("#dataIndicatorTable tbody");
   const addButton = document.getElementById("addTableRow");
+  const updateMetricIdSelect = document.getElementById(
+    "formIndicatorDataMetricId"
+  );
+  const initialDayIndicator = document.getElementById("initialDayIndicator");
+
+  async function fetchIndicatorDetails() {
+    const url = `https://localhost:44357/Indicators/Details/${indicatorId}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(
+        "There has been a problem with your fetch operation:",
+        error
+      );
+    }
+  }
+
+  async function fetchAndDisplayIndicatorDetails() {
+    const indicatorData = await fetchIndicatorDetails();
+    if (indicatorData) {
+      populateControls(indicatorData);
+      populateTable(indicatorData);
+    }
+  }
+
+  function populateControls(data) {
+    // Poblar el select de intervalo de actualización
+    updateIntervalSelect.value = data.Indicator.MeasurementFrequency;
+
+    // Poblar el select de agrupaciones de metricas
+    updateMetricIdSelect.value = data.MetricType.Id;
+
+    // Determinar el día inicial basado en el primer DataIndicator o usar el día actual si no hay datos
+    const firstDataIndicatorDate =
+      data.DataIndicators.length > 0
+        ? dayjs(data.DataIndicators[0].Date)
+        : dayjs();
+
+    // Poblar el valor del día inicial
+    initialDayIndicator.value = firstDataIndicatorDate.date();
+
+    // Poblar la fecha límite
+    const dateInput = deadlineDatePicker;
+    let deadlineDate =
+      data.Indicator.DeadlineDate || dayjs().format("YYYY-MM-DD");
+
+    if (dateInput._datepicker) {
+      dateInput._datepicker.setDate(deadlineDate);
+    } else {
+      dateInput.value = deadlineDate;
+    }
+  }
+
+  function populateTable(data) {
+    const dates = data.DataIndicators.map((di) => ({
+      date: di.Date,
+      value: di.Value,
+      objective: (data.Targets.find((t) => t.Id === di.Id) || {}).ExpectedValue,
+    }));
+
+    if (dates.length === 0) {
+      updateTable();
+    } else {
+      tableBody.innerHTML = "";
+      dates.forEach((date) => {
+        addDateRow(date.date, date.value, date.objective);
+      });
+    }
+  }
+
+  function addDateRow(date, value = "Valor", objective = "Objetivo") {
+    const row = `
+      <tr>
+        <td class="whitespace-nowrap border border-l-0 border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500">
+          ${dayjs(date).format("DD/MM/YYYY")}
+        </td>
+        <td class="whitespace-nowrap border border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500">
+          <label class="block">
+            <input class="form-input w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent" placeholder="Ingrese el Valor" value="${value}" type="number" min="0" />
+          </label>
+        </td>
+        <td class="whitespace-nowrap border border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500">
+          <label class="block">
+            <input class="form-input w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent" placeholder="Ingrese el objetivo" value="${objective}" type="number" min="0" />
+          </label>
+        </td>
+        <td class="whitespace-nowrap border border-r-0 border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500">
+          <div class="flex justify-center space-x-reverse space-x-2">
+            <button onclick="removeRow(this)" class="btn h-8 w-8 p-0 text-error hover:bg-error/20 focus:bg-error/20 active:bg-error/25">
+              <i class="fa fa-trash-alt"></i>
+            </button>
+          </div>
+        </td>
+      </tr>`;
+    tableBody.innerHTML += row;
+  }
+
+  initialDayIndicator.addEventListener("change", updateTable);
+
+  fetchAndDisplayIndicatorDetails();
 
   function adjustDateByInterval(date, interval) {
     switch (interval) {
@@ -339,13 +451,13 @@ function setupDateTableUpdater() {
     return date;
   }
 
-  function generateDates(startDate, interval) {
+  function generateDates(initialDay, interval) {
     if (["Nunca"].includes(interval)) {
       return [];
     }
 
     const dates = [];
-    let currentDate = startDate ? dayjs(startDate) : dayjs();
+    let currentDate = initialDay ? dayjs().set("date", initialDay) : dayjs();
     if (!currentDate.isValid()) {
       currentDate = dayjs();
     }
@@ -364,8 +476,8 @@ function setupDateTableUpdater() {
 
   function updateTable() {
     const interval = updateIntervalSelect.value;
-    const startDate = startDatePicker.value;
-    const dates = generateDates(startDate, interval);
+    const startDay = initialDayIndicator.value;
+    const dates = generateDates(startDay, interval);
 
     addButton.style.cursor = "pointer";
     addButton.disabled = false;
@@ -539,7 +651,7 @@ function setupDateTableUpdater() {
   }
 
   updateIntervalSelect.addEventListener("change", updateTable);
-  startDatePicker.addEventListener("change", updateTable);
+  deadlineDatePicker.addEventListener("change", updateTable);
   addButton.addEventListener("click", addTableRow);
   document
     .getElementById("saveChangesButton")
@@ -561,5 +673,3 @@ document.addEventListener("DOMContentLoaded", function () {
     "table-collapse-indicator"
   );
 });
-
-document.addEventListener("DOMContentLoaded", setupDateTableUpdater);
