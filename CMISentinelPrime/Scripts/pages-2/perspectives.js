@@ -355,11 +355,9 @@ function setupDateTableUpdater() {
       return dates;
     }
 
-    adjustDateByInterval(currentDate, interval);
-
     for (let i = 0; i < 12; i++) {
       dates.push(currentDate.toDate());
-      adjustDateByInterval(currentDate, interval);
+      currentDate = adjustDateByInterval(currentDate, interval);
     }
     return dates;
   }
@@ -368,6 +366,14 @@ function setupDateTableUpdater() {
     const interval = updateIntervalSelect.value;
     const startDate = startDatePicker.value;
     const dates = generateDates(startDate, interval);
+
+    addButton.style.cursor = "pointer";
+    addButton.disabled = false;
+
+    if (["Nunca", "Una vez"].includes(interval)) {
+      addButton.style.cursor = "not-allowed";
+      addButton.disabled = true;
+    }
 
     tableBody.innerHTML = "";
 
@@ -431,13 +437,35 @@ function setupDateTableUpdater() {
   }
 
   function addTableRow() {
+    const interval = updateIntervalSelect.value;
+
+    if (["Nunca", "Una vez"].includes(interval)) {
+      $notification({
+        text: "Selecciona un intervalo de actualización recurrente para poder agregar registros.",
+        variant: "error",
+      });
+      return;
+    }
+
     const lastDateCell = tableBody.querySelector(
       "tr:last-child td:first-child"
     );
-    let lastDate = lastDateCell
-      ? dayjs(lastDateCell.textContent, "DD/MM/YYYY")
-      : dayjs(startDatePicker.value || new Date());
-    adjustDateByInterval(lastDate, updateIntervalSelect.value);
+    let lastDateText = lastDateCell
+      ? lastDateCell.textContent.match(/\d{2}\/\d{2}\/\d{4}/)[0]
+      : null;
+    // cambie el formato de la fecha de DD/MM/YYYY a YYYY-MM-DD
+    // porque si se usa con '/' termina dando error a la hora de
+    // ajustar la fecha por el intervalo
+    lastDateText = lastDateText
+      ? lastDateText.split("/").reverse().join("-")
+      : null;
+    let lastDate = lastDateText ? dayjs(lastDateText) : dayjs();
+
+    if (!lastDate.isValid()) {
+      lastDate = dayjs();
+    }
+
+    lastDate = adjustDateByInterval(lastDate, interval);
 
     const row = `
       <tr>
