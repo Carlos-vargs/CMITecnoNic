@@ -378,7 +378,7 @@ function setupDateTableUpdater(indicatorId = null) {
 
     // Poblar la fecha límite
     deadlineDatePicker._datepicker = flatpickr(deadlineDatePicker, {
-      defaultDate: data.Targets.DeadlineDate || dayjs().format("YYYY-MM-DD"),
+      defaultDate: data.Targets?.DeadlineDate || dayjs().format("YYYY-MM-DD"),
     });
   }
 
