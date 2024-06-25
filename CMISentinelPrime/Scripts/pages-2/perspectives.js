@@ -400,12 +400,22 @@ function setupDateTableUpdater(indicatorId = null) {
     } else {
       tableBody.innerHTML = "";
       dates.forEach((date) => {
-        addDateRow(date.date, date.value, date.objective);
+        const isFirstRow = index === 0;
+        addDateRow(date.date, date.value, date.objective, isFirstRow);
       });
     }
   }
 
-  function addDateRow(date, value = "Valor", objective = "Objetivo") {
+  function addDateRow(
+    date = null,
+    value = "Valor",
+    objective = "0",
+    isFirstRow = false
+  ) {
+    const objectiveInput = isFirstRow
+      ? `<input class="form-input w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent" value="${objective}" type="number" min="0" onchange="handleFirstObjectiveChange(this)" />`
+      : `<input style="cursor: not-allowed;" class="form-input w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent" value="${objective}" type="number" min="0" disabled />`;
+
     const row = `
       <tr>
         <td class="whitespace-nowrap border border-l-0 border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500">
@@ -418,7 +428,7 @@ function setupDateTableUpdater(indicatorId = null) {
         </td>
         <td class="whitespace-nowrap border border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500">
           <label class="block">
-            <input class="form-input w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent" placeholder="Ingrese el objetivo" value="${objective}" type="number" min="0" />
+            ${objectiveInput}
           </label>
         </td>
         <td class="whitespace-nowrap border border-r-0 border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500">
@@ -489,6 +499,19 @@ function setupDateTableUpdater(indicatorId = null) {
       addButton.style.cursor = "not-allowed";
       addButton.disabled = true;
     }
+    
+    // aun no funciona recuperar el ultimo valor de la tabla
+    let existingData = [];
+    if (tableBody && tableBody.querySelectorAll("tr").length > 0) {
+      existingData = Array.from(tableBody.querySelectorAll("tr")).map((tr) => {
+        const valueInput = tr.cells[1]?.querySelector("input");
+        const objectiveInput = tr.cells[2]?.querySelector("input");
+        return {
+          value: valueInput ? valueInput.value : "0",
+          objective: objectiveInput ? objectiveInput.value : "0",
+        };
+      });
+    }
 
     tableBody.innerHTML = "";
 
@@ -503,53 +526,26 @@ function setupDateTableUpdater(indicatorId = null) {
       return;
     }
 
-    dates.forEach((date) => {
-      const row = `
-      <tr>
-        <td
-        class="whitespace-nowrap border border-l-0 border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
-        >
-          ${dayjs(date).format("DD/MM/YYYY")}
-        </td>
-        <td
-            class="whitespace-nowrap border border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
-        >
-          <label class="block">
-            <input
-              class="form-input w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-              placeholder="Ingrese el Valor"
-              value="Valor"
-              type="number"
-              min="0"
-            />
-          </label>
-        </td>
-        <td
-            class="whitespace-nowrap border border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
-        >
-          <label class="block">
-            <input
-              class="form-input w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-              placeholder="Ingrese el objetivo"
-              value="Objetivo"
-              type="number"
-              min="0"
-            />
-          </label>
-        </td>
-        <td
-            class="whitespace-nowrap border border-r-0 border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
-        >
-          <div class="flex justify-center space-x-reverse space-x-2">
-            <button onclick="removeRow(this)" class="btn h-8 w-8 p-0 text-error hover:bg-error/20 focus:bg-error/20 active:bg-error/25">
-              <i class="fa fa-trash-alt"></i>
-            </button>
-          </div>
-        </td>
-      </tr>`;
-      tableBody.innerHTML += row;
+    const firstObjective =
+      existingData.length > 0 ? existingData[0].objective : "0";
+
+    dates.forEach((date, index) => {
+      const isFirstRow = index === 0;
+      const value = existingData[index] ? existingData[index].value : "0";
+      addDateRow(date, value, firstObjective, isFirstRow);
     });
   }
+
+  window.handleFirstObjectiveChange = function (input) {
+    const newValue = input.value;
+    const objectiveInputs = document.querySelectorAll(
+      '#dataIndicatorTable tbody tr td:nth-child(3) input[type="number"]'
+    );
+
+    objectiveInputs.forEach((childInput, index) => {
+      childInput.value = newValue;
+    });
+  };
 
   function addTableRow() {
     const interval = updateIntervalSelect.value;
@@ -565,12 +561,10 @@ function setupDateTableUpdater(indicatorId = null) {
     const lastDateCell = tableBody.querySelector(
       "tr:last-child td:first-child"
     );
-    let lastDateText = lastDateCell
-      ? lastDateCell.textContent.match(/\d{2}\/\d{2}\/\d{4}/)[0]
+    let lastDateMatch = lastDateCell
+      ? lastDateCell.textContent.match(/\d{2}\/\d{2}\/\d{4}/)
       : null;
-    // cambie el formato de la fecha de DD/MM/YYYY a YYYY-MM-DD
-    // porque si se usa con '/' termina dando error a la hora de
-    // ajustar la fecha por el intervalo
+    let lastDateText = lastDateMatch ? lastDateMatch[0] : null;
     lastDateText = lastDateText
       ? lastDateText.split("/").reverse().join("-")
       : null;
@@ -582,48 +576,12 @@ function setupDateTableUpdater(indicatorId = null) {
 
     lastDate = adjustDateByInterval(lastDate, interval);
 
-    const row = `
-      <tr>
-        <td
-        class="whitespace-nowrap border border-l-0 border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
-        >
-          ${lastDate.format("DD/MM/YYYY")}
-        </td>
-        <td
-            class="whitespace-nowrap border border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
-        >
-          <label class="block">
-            <input
-              class="form-input w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-              placeholder="Ingrese el Valor"
-              value="Valor"
-              type="number"
-            />
-          </label>
-        </td>
-        <td
-            class="whitespace-nowrap border border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
-        >
-          <label class="block">
-            <input
-              class="form-input w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-              placeholder="Ingrese el objetivo"
-              value="Objetivo"
-              type="number"
-            />
-          </label>
-        </td>
-        <td
-            class="whitespace-nowrap border border-r-0 border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
-        >
-          <div class="flex justify-center space-x-reverse space-x-2">
-            <button onclick="removeRow(this)" class="btn h-8 w-8 p-0 text-error hover:bg-error/20 focus:bg-error/20 active:bg-error/25">
-              <i class="fa fa-trash-alt"></i>
-            </button>
-          </div>
-        </td>
-      </tr>`;
-    tableBody.innerHTML += row;
+    const firstRow = tableBody.querySelector("tr:first-child");
+    const firstObjective = firstRow
+      ? firstRow.cells[2].querySelector("input").value
+      : "0";
+
+    addDateRow(lastDate, 0, firstObjective);
   }
 
   window.removeRow = function (button) {
