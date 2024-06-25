@@ -47,18 +47,18 @@ namespace CMISentinelPrime.Controllers
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Description,ExpectedValue,DeadlineDate,IndicatorId")] Target target)
+        public JsonResult Create([Bind(Include = "Description,ExpectedValue,DeadlineDate,IndicatorId")] Target target)
         {
             if (ModelState.IsValid)
             {
                 db.TargetSet.Add(target);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return Json(new { success = true, message = "Objetivo creado exitosamente." });
             }
 
-            ViewBag.IndicatorId = new SelectList(db.IndicatorSet, "Id", "Name", target.IndicatorId);
-            return View(target);
+            // Recoger los errores de validación
+            var errors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+            return Json(new { success = false, message = "Error al crear el objetivo.", errors = errors });
         }
 
         // GET: Targets/Edit/5

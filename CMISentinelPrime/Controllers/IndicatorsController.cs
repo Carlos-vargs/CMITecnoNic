@@ -47,7 +47,9 @@ namespace CMISentinelPrime.Controllers
                     Name = indicator.Name,
                     Description = indicator.Description,
                     MeasurementFrequency = indicator.MeasurementFrequency,
-                    UnitMeasure = indicator.UnitMeasure
+                    UnitMeasure = indicator.UnitMeasure,
+                    ObjectiveId = indicator.ObjectiveId,
+                    MetricTypeId = indicator.MetricTypeId
                 },
                 MetricType = new
                 {
@@ -58,15 +60,17 @@ namespace CMISentinelPrime.Controllers
                 {
                     Id = di.Id,
                     Value = di.Value,
-                    Date = di.Date
+                    Date = di.Date.ToString("yyyy-MM-dd"),
+                    IndicatorId = di.IndicatorId
                 }),
                 Targets = indicator.Target.Select(t => new
                 {
                     Id = t.Id,
                     Description = t.Description,
                     ExpectedValue = t.ExpectedValue,
-                    DeadlineDate = t.DeadlineDate
-                })
+                    DeadlineDate = t.DeadlineDate.ToString("yyyy-MM-dd"),
+                    IndicatorId = t.IndicatorId
+                }).FirstOrDefault()
             };
 
             return Json(response, JsonRequestBehavior.AllowGet);
@@ -131,7 +135,7 @@ namespace CMISentinelPrime.Controllers
                 {
                     Id = indicator.MetricType.Id,
                     Name = indicator.MetricType.Name
-                }, 
+                },
             };
 
             return Json(response, JsonRequestBehavior.AllowGet);
@@ -142,7 +146,6 @@ namespace CMISentinelPrime.Controllers
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,Description,MeasurementFrequency,UnitMeasure,ObjectiveId,MetricTypeId")] Indicator indicator, int CmiId)
         {
             try

@@ -47,18 +47,24 @@ namespace CMISentinelPrime.Controllers
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Value,Date,IndicatorId")] DataIndicator dataIndicator)
+        public JsonResult Create(List<DataIndicator> dataIndicators)
         {
             if (ModelState.IsValid)
             {
-                db.DataIndicatorSet.Add(dataIndicator);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+                foreach (var dataIndicator in dataIndicators)
+                {
+                    db.DataIndicatorSet.Add(dataIndicator);
+                }
 
-            ViewBag.IndicatorId = new SelectList(db.IndicatorSet, "Id", "Name", dataIndicator.IndicatorId);
-            return View(dataIndicator);
+                db.SaveChanges();
+                return Json(new { success = true, message = "Datos insertados exitosamente." });
+            }
+            else
+            {
+                // Recoger los errores de validación
+                var errors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+                return Json(new { success = false, message = "Error en la inserción de datos.", errors = errors });
+            }
         }
 
         // GET: DataIndicators/Edit/5
