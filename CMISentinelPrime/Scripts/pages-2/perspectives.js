@@ -316,6 +316,8 @@ function setupDateTableUpdater(indicatorId = null) {
     return;
   }
 
+  let globalIndicatorData = null; // Esta variable almacenará los datos del indicador
+
   const updateIntervalSelect = document.getElementById(
     "measurementFrequencySelect"
   );
@@ -352,6 +354,7 @@ function setupDateTableUpdater(indicatorId = null) {
   async function fetchAndDisplayIndicatorDetails() {
     const indicatorData = await fetchIndicatorDetails();
     if (indicatorData) {
+      globalIndicatorData = indicatorData;
       populateControls(indicatorData);
       populateTable(indicatorData);
     }
@@ -640,14 +643,85 @@ function setupDateTableUpdater(indicatorId = null) {
   };
 
   async function sendUpdatedData() {
-    const updatedData = Array.from(tableBody.querySelectorAll("tr")).map(
+    if (!globalIndicatorData) {
+      console.error("No indicator data available");
+      return;
+    }
+
+    const indicatorData = {
+      Id: globalIndicatorData.Indicator.Id,
+      Name: globalIndicatorData.Indicator.Name,
+      Description: globalIndicatorData.Indicator.Description,
+      MeasurementFrequency: updateIntervalSelect.value,
+      UnitMeasure: globalIndicatorData.Indicator.UnitMeasure,
+      ObjectiveId: globalIndicatorData.Indicator.ObjectiveId,
+      MetricTypeId: updateMetricIdSelect.value,
+    };
+
+    const dataIndicators = Array.from(tableBody.querySelectorAll("tr")).map(
       (row) => ({
-        date: row.cells[0].innerText,
-        value: row.cells[1].querySelector("input").value,
-        objective: row.cells[2].querySelector("input").value,
+        Id: row.dataset.id,
+        Value: row.cells[1].querySelector("input").value,
+        Date: dayjs(row.cells[0].innerText, "DD/MM/YYYY").format("YYYY-MM-DD"),
+        IndicatorId: globalIndicatorData.Indicator.Id,
       })
     );
-    console.log({ updatedData });
+
+    const firstRow = tableBody.querySelector("tr");
+    const target = {
+      Id: firstRow ? firstRow.dataset.targetId : null,
+      Description: firstRow
+        ? firstRow.cells[2].querySelector("input").value
+        : "",
+      ExpectedValue: firstRow
+        ? firstRow.cells[2].querySelector("input").value
+        : "",
+      DeadlineDate: dayjs(deadlineDatePicker.value, "YYYY-MM-DD").format(
+        "YYYY-MM-DD"
+      ),
+      IndicatorId: globalIndicatorData.Indicator.Id,
+    };
+    console.log("Sending Indicator Data:", indicatorData);
+    console.log("Sending DataIndicators:", dataIndicators);
+    console.log("Sending Target:", target);
+
+    // try {
+    //   const indicatorResponse = await fetch(
+    //     `https://localhost:44357/Indicators/Edit/${indicatorData.Id}`,
+    //     {
+    //       method: "POST",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify(indicatorData),
+    //     }
+    //   );
+    //   const indicatorResult = await indicatorResponse.json();
+
+    //   const dataIndicatorsResponse = await fetch(
+    //     "https://localhost:44357/DataIndicators/Create",
+    //     {
+    //       method: "POST",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify(dataIndicators),
+    //     }
+    //   );
+    //   const dataIndicatorsResult = await dataIndicatorsResponse.json();
+
+    //   const targetsResponse = await fetch(
+    //     "https://localhost:44357/Targets/Create",
+    //     {
+    //       method: "POST",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify(targets),
+    //     }
+    //   );
+    //   const targetsResult = await targetsResponse.json();
+
+    //   console.log("Indicator Update Response:", indicatorResult);
+    //   console.log("DataIndicators Create Response:", dataIndicatorsResult);
+    //   console.log("Targets Create Response:", targetsResult);
+    // } catch (error) {
+    //   console.error("Error sending updated data:", error);
+    // }
   }
 
   updateIntervalSelect.addEventListener("change", updateTable);
