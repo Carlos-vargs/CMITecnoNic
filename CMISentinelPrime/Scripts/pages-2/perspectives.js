@@ -377,29 +377,25 @@ function setupDateTableUpdater(indicatorId = null) {
     initialDayIndicator.value = firstDataIndicatorDate.date();
 
     // Poblar la fecha límite
-    const dateInput = deadlineDatePicker;
-    let deadlineDate =
-      data.Indicator.DeadlineDate || dayjs().format("YYYY-MM-DD");
-
-    if (dateInput._datepicker) {
-      dateInput._datepicker.setDate(deadlineDate);
-    } else {
-      dateInput.value = deadlineDate;
-    }
+    deadlineDatePicker._datepicker = flatpickr(deadlineDatePicker, {
+      defaultDate: data.Targets.DeadlineDate || dayjs().format("YYYY-MM-DD"),
+    });
   }
 
   function populateTable(data) {
     const dates = data.DataIndicators.map((di) => ({
-      date: di.Date,
+      date: dayjs(di.Date, "YYYY-MM-DD").format("DD-MM-YYYY"),
       value: di.Value,
-      objective: (data.Targets.find((t) => t.Id === di.Id) || {}).ExpectedValue,
+      objective: data.Targets.ExpectedValue,
     }));
+
+    console.log({ dates });
 
     if (dates.length === 0) {
       updateTable();
     } else {
       tableBody.innerHTML = "";
-      dates.forEach((date) => {
+      dates.forEach((date, index) => {
         const isFirstRow = index === 0;
         addDateRow(date.date, date.value, date.objective, isFirstRow);
       });
@@ -419,7 +415,7 @@ function setupDateTableUpdater(indicatorId = null) {
     const row = `
       <tr>
         <td class="whitespace-nowrap border border-l-0 border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500">
-          ${dayjs(date).format("DD/MM/YYYY")}
+          ${date}
         </td>
         <td class="whitespace-nowrap border border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500">
           <label class="block">
@@ -481,7 +477,7 @@ function setupDateTableUpdater(indicatorId = null) {
     }
 
     for (let i = 0; i < 12; i++) {
-      dates.push(currentDate.toDate());
+      dates.push(dayjs(currentDate, "YYYY-MM-DD").format("DD-MM-YYYY"));
       currentDate = adjustDateByInterval(currentDate, interval);
     }
     return dates;
@@ -499,7 +495,7 @@ function setupDateTableUpdater(indicatorId = null) {
       addButton.style.cursor = "not-allowed";
       addButton.disabled = true;
     }
-    
+
     // aun no funciona recuperar el ultimo valor de la tabla
     let existingData = [];
     if (tableBody && tableBody.querySelectorAll("tr").length > 0) {
@@ -562,11 +558,11 @@ function setupDateTableUpdater(indicatorId = null) {
       "tr:last-child td:first-child"
     );
     let lastDateMatch = lastDateCell
-      ? lastDateCell.textContent.match(/\d{2}\/\d{2}\/\d{4}/)
+      ? lastDateCell.textContent.match(/\d{2}-\d{2}-\d{4}/)
       : null;
     let lastDateText = lastDateMatch ? lastDateMatch[0] : null;
     lastDateText = lastDateText
-      ? lastDateText.split("/").reverse().join("-")
+      ? lastDateText.split("-").reverse().join("-")
       : null;
     let lastDate = lastDateText ? dayjs(lastDateText) : dayjs();
 
@@ -581,7 +577,11 @@ function setupDateTableUpdater(indicatorId = null) {
       ? firstRow.cells[2].querySelector("input").value
       : "0";
 
-    addDateRow(lastDate, 0, firstObjective);
+    addDateRow(
+      dayjs(lastDate, "YYYY-MM-DD").format("DD-MM-YYYY"),
+      0,
+      firstObjective
+    );
   }
 
   window.removeRow = function (button) {
@@ -606,6 +606,10 @@ function setupDateTableUpdater(indicatorId = null) {
       return;
     }
 
+    var token = document.querySelector("#myAntiForgeryTokenForm").value;
+
+    console.log({ token });
+
     const indicatorData = {
       Id: globalIndicatorData.Indicator.Id,
       Name: globalIndicatorData.Indicator.Name,
@@ -614,20 +618,21 @@ function setupDateTableUpdater(indicatorId = null) {
       UnitMeasure: globalIndicatorData.Indicator.UnitMeasure,
       ObjectiveId: globalIndicatorData.Indicator.ObjectiveId,
       MetricTypeId: updateMetricIdSelect.value,
+      CMIId: 1,
     };
 
     const dataIndicators = Array.from(tableBody.querySelectorAll("tr")).map(
       (row) => ({
         Id: row.dataset.id,
         Value: row.cells[1].querySelector("input").value,
-        Date: dayjs(row.cells[0].innerText, "DD/MM/YYYY").format("YYYY-MM-DD"),
+        Date: row.cells[0].innerText.split("-").reverse().join("-"),
         IndicatorId: globalIndicatorData.Indicator.Id,
       })
     );
 
     const firstRow = tableBody.querySelector("tr");
     const target = {
-      Id: firstRow ? firstRow.dataset.targetId : null,
+      Id: firstRow.dataset.targetId ? firstRow.dataset.targetId : null,
       Description: firstRow
         ? firstRow.cells[2].querySelector("input").value
         : "",
@@ -643,43 +648,47 @@ function setupDateTableUpdater(indicatorId = null) {
     console.log("Sending DataIndicators:", dataIndicators);
     console.log("Sending Target:", target);
 
-    // try {
-    //   const indicatorResponse = await fetch(
-    //     `https://localhost:44357/Indicators/Edit/${indicatorData.Id}`,
-    //     {
-    //       method: "POST",
-    //       headers: { "Content-Type": "application/json" },
-    //       body: JSON.stringify(indicatorData),
-    //     }
-    //   );
-    //   const indicatorResult = await indicatorResponse.json();
+    try {
+      const indicatorResponse = await fetch(
+        `https://localhost:44357/Indicators/Edit/${indicatorData.Id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // RequestVerificationToken: token,
+          },
+          body: JSON.stringify(indicatorData),
+        }
+      );
 
-    //   const dataIndicatorsResponse = await fetch(
-    //     "https://localhost:44357/DataIndicators/Create",
-    //     {
-    //       method: "POST",
-    //       headers: { "Content-Type": "application/json" },
-    //       body: JSON.stringify(dataIndicators),
-    //     }
-    //   );
-    //   const dataIndicatorsResult = await dataIndicatorsResponse.json();
+      const dataIndicatorsResponse = await fetch(
+        "https://localhost:44357/DataIndicators/Create",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dataIndicators),
+        }
+      );
 
-    //   const targetsResponse = await fetch(
-    //     "https://localhost:44357/Targets/Create",
-    //     {
-    //       method: "POST",
-    //       headers: { "Content-Type": "application/json" },
-    //       body: JSON.stringify(targets),
-    //     }
-    //   );
-    //   const targetsResult = await targetsResponse.json();
+      const targetsResponse = await fetch(
+        "https://localhost:44357/Targets/Create",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(target),
+        }
+      );
 
-    //   console.log("Indicator Update Response:", indicatorResult);
-    //   console.log("DataIndicators Create Response:", dataIndicatorsResult);
-    //   console.log("Targets Create Response:", targetsResult);
-    // } catch (error) {
-    //   console.error("Error sending updated data:", error);
-    // }
+      const targetsResult = await targetsResponse.json();
+      const indicatorResult = await indicatorResponse.json();
+      const dataIndicatorsResult = await dataIndicatorsResponse.json();
+
+      console.log("Indicator Update Response:", indicatorResult);
+      console.log("DataIndicators Create Response:", dataIndicatorsResult);
+      console.log("Targets Create Response:", targetsResult);
+    } catch (error) {
+      console.error("Error sending updated data:", error);
+    }
   }
 
   updateIntervalSelect.addEventListener("change", updateTable);

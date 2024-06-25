@@ -1106,9 +1106,7 @@
                         </div>
                         <div class="flex justify-end">
                             <button
-                                style="cursor: not-allowed;"
                                 id="addTableRow"
-                                disabled
                                 class="h-8 rounded-md bg-primary px-4 text-xs+ font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">
                                 Agregar nuevo 
                             </button>
@@ -1130,6 +1128,11 @@
             </div>
         </div>
     </div>
+
+    <form id="myAntiForgeryTokenForm">
+        @Html.AntiForgeryToken()
+    </form>
+
 </main>
 
 @section Scripts {
