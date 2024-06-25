@@ -324,24 +324,19 @@ function setupDateTableUpdater() {
   function adjustDateByInterval(date, interval) {
     switch (interval) {
       case "Diariamente":
-        date.setDate(date.getDate() + 1);
-        break;
+        return date.add(1, "day");
       case "Semanalmente":
-        date.setDate(date.getDate() + 7);
-        break;
+        return date.add(7, "days");
       case "Mensualmente":
-        date.setMonth(date.getMonth() + 1);
-        break;
+        return date.add(1, "month");
       case "Trimestralmente":
-        date.setMonth(date.getMonth() + 3);
-        break;
+        return date.add(3, "months");
       case "Semestralmente":
-        date.setMonth(date.getMonth() + 6);
-        break;
+        return date.add(6, "months");
       case "Anualmente":
-        date.setFullYear(date.getFullYear() + 1);
-        break;
+        return date.add(1, "year");
     }
+    return date;
   }
 
   function generateDates(startDate, interval) {
@@ -350,20 +345,20 @@ function setupDateTableUpdater() {
     }
 
     const dates = [];
-    let currentDate = startDate ? new Date(startDate) : new Date();
-    if (isNaN(currentDate.getTime())) {
-      currentDate = new Date();
+    let currentDate = startDate ? dayjs(startDate) : dayjs();
+    if (!currentDate.isValid()) {
+      currentDate = dayjs();
     }
 
     if (interval === "Una vez") {
-      dates.push(new Date(currentDate));
+      dates.push(currentDate.toDate());
       return dates;
     }
 
     adjustDateByInterval(currentDate, interval);
 
     for (let i = 0; i < 12; i++) {
-      dates.push(new Date(currentDate));
+      dates.push(currentDate.toDate());
       adjustDateByInterval(currentDate, interval);
     }
     return dates;
@@ -376,13 +371,24 @@ function setupDateTableUpdater() {
 
     tableBody.innerHTML = "";
 
+    if (!dates.length) {
+      tableBody.innerHTML = `
+       <tr>
+          <td class="rounded-lg px-5 py-8 text-lg text-center" colspan="4">
+            Por favor, selecciona un intervalo de actualización para comenzar a añadir registros.
+          </td>
+        </tr> 
+      `;
+      return;
+    }
+
     dates.forEach((date) => {
       const row = `
       <tr>
         <td
         class="whitespace-nowrap border border-l-0 border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
         >
-          ${date.toLocaleDateString()}
+          ${dayjs(date).format("DD/MM/YYYY")}
         </td>
         <td
             class="whitespace-nowrap border border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
@@ -429,8 +435,8 @@ function setupDateTableUpdater() {
       "tr:last-child td:first-child"
     );
     let lastDate = lastDateCell
-      ? new Date(lastDateCell.textContent)
-      : new Date(startDatePicker.value || new Date());
+      ? dayjs(lastDateCell.textContent, "DD/MM/YYYY")
+      : dayjs(startDatePicker.value || new Date());
     adjustDateByInterval(lastDate, updateIntervalSelect.value);
 
     const row = `
@@ -438,7 +444,7 @@ function setupDateTableUpdater() {
         <td
         class="whitespace-nowrap border border-l-0 border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
         >
-          ${lastDate.toLocaleDateString()}
+          ${lastDate.format("DD/MM/YYYY")}
         </td>
         <td
             class="whitespace-nowrap border border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
@@ -480,6 +486,15 @@ function setupDateTableUpdater() {
   window.removeRow = function (button) {
     const row = button.closest("tr");
     row.parentNode.removeChild(row);
+
+    if (tableBody.querySelectorAll("tr").length === 0) {
+      tableBody.innerHTML = `
+        <tr>
+          <td class="rounded-lg px-5 py-8 text-lg text-center" colspan="4">
+            Por favor, selecciona un intervalo de actualización para comenzar a añadir registros.
+          </td>
+        </tr>`;
+    }
 
     $notification({ text: "Registro Eliminado", variant: "success" });
   };
