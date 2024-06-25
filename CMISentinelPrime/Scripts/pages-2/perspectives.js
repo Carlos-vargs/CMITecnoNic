@@ -18,7 +18,7 @@ const initializePerspectivesComponents = () => {
   new Modal("#indicatorEditModal");
 
   // Add Modal For Indicator Data
-  new Modal("#indicatorDataModal");
+  const indicatorDataModal = new Modal("#indicatorDataModal");
 
   // Cargar la informacion para editar una perspectiva
   window.openPerspectiveModal = async function (dispatcher) {
@@ -151,7 +151,7 @@ const initializePerspectivesComponents = () => {
 
     title.textContent = "Editar Valores: " + indicatorName;
 
-    setupDateTableUpdater(indicatorId);
+    setupDateTableUpdater(indicatorId, indicatorDataModal);
   };
 
   // Table Collapse
@@ -311,7 +311,7 @@ const initializeDropdownPoppers = (
   initPoppers();
 };
 
-function setupDateTableUpdater(indicatorId = null) {
+function setupDateTableUpdater(indicatorId = null, indicatorDataModal = null) {
   if (!indicatorId) {
     return;
   }
@@ -678,6 +678,15 @@ function setupDateTableUpdater(indicatorId = null) {
           body: JSON.stringify(target),
         }
       );
+
+      // close indicator modal
+      indicatorDataModal?.close();
+      $notification({
+        text: "Registro Insertado Exitosamente",
+        variant: "success",
+        gravity: "top", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+      });
 
       const targetsResult = await targetsResponse.json();
       const indicatorResult = await indicatorResponse.json();

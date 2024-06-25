@@ -199,12 +199,27 @@ namespace CMISentinelPrime.Controllers
         // POST: Indicators/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id, int CmiId)
         {
             Indicator indicator = db.IndicatorSet.Find(id);
+            if (indicator == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Eliminar DataIndicators asociados
+            var dataIndicators = db.DataIndicatorSet.Where(di => di.IndicatorId == id).ToList();
+            db.DataIndicatorSet.RemoveRange(dataIndicators);
+
+            // Eliminar Targets asociados
+            var targets = db.TargetSet.Where(t => t.IndicatorId == id).ToList();
+            db.TargetSet.RemoveRange(targets);
+
+            // Eliminar el indicador
             db.IndicatorSet.Remove(indicator);
             db.SaveChanges();
-            return RedirectToAction("Index");
+
+            return RedirectToAction("Details", "CMI", new { id = CmiId });
         }
 
         protected override void Dispose(bool disposing)

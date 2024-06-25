@@ -409,15 +409,15 @@
                                                                                                                                             <span>Editar Indicador</span>                                                                                                                                                                            
                                                                                                                                     </li>
                                                                                                                                     <li>
-                                                                                                                                        @using (Html.BeginForm("Delete", "Objectives",
-                                                                                                                                    FormMethod.Post, new { id = "deleteObjetiveForm-" + objective.Id }))
+                                                                                                                                        @using (Html.BeginForm("Delete", "Indicators",
+                                                                                                                                    FormMethod.Post, new { id = "deleteIndicatorForm-" + indicator.Id }))
                                                                                                                                         {
                                                                                                                                             @Html.AntiForgeryToken()
-                                                                                                                                            <input type="hidden" name="id" value="@objective.Id" />
+                                                                                                                                            <input type="hidden" name="id" value="@indicator.Id" />
                                                                                                                                             <input type="hidden" name="CmiId" value="@Model.CMI.Id" />
 
                                                                                                                                             <a href="javascript:void(0);"
-                                                                                                                                            onclick="document.getElementById('deleteObjetiveForm-@objective.Id').submit();"
+                                                                                                                                            onclick="document.getElementById('deleteIndicatorForm-@indicator.Id').submit();"
                                                                                                                                             class="flex h-8 items-center space-x-3 px-3 pr-8 font-medium tracking-wide text-error outline-none transition-all hover:bg-error/20 focus:bg-error/20">
                                                                                                                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5"
                                                                                                                                                     fill="none" viewBox="0 0 24 24" stroke="currentColor"
