@@ -999,9 +999,7 @@
                             </h4>
                         </div>
                     </div>
-                    <form action="@Url.Action("Create", "Indicators")" method="post" class="space-y-4 p-4 pb-0">
-
-                        @Html.AntiForgeryToken()
+                    <div class="space-y-4 p-4 pb-0">
 
                         <input type="hidden" id="objectiveId" name="ObjectiveId">
                         <input type="hidden" name="CmiId" value="@Model.CMI.Id" />
@@ -1010,6 +1008,7 @@
                              <label class="block text-left">
                                 <span>Intervalo de actualización</span>
                                 <select
+                                    id="measurementFrequencySelect"
                                     name="MeasurementFrequency"
                                     class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
                                 >
@@ -1058,59 +1057,38 @@
                             <div
                                 class="is-scrollbar-hidden min-w-full overflow-x-auto rounded-lg border border-slate-200 dark:border-navy-500"
                             >
-                                <table class="w-full text-left">
-                                <thead>
-                                    <tr>
-                                        <th
-                                            class="whitespace-nowrap border border-l-0 border-slate-200 dark:border-navy-500 bg-slate-200 px-1.5 py-1.5 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100"
-                                        >
-                                            Fecha
-                                        </th>
-                                        <th
-                                            class="whitespace-nowrap border border-slate-200 dark:border-navy-500 bg-slate-200 px-1.5 py-1.5 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100"
-                                        >
-                                            Valor
-                                        </th>
-                                        <th
-                                            class="whitespace-nowrap border border-slate-200 dark:border-navy-500 bg-slate-200 px-1.5 py-1.5 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100"
-                                        >
-                                            Objetivo
-                                        </th>
-                                        <th
-                                            class="whitespace-nowrap border border-slate-200 dark:border-navy-500 bg-slate-200 px-1.5 py-1.5 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100"
-                                        >
-                                            Acciones
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td
-                                            class="whitespace-nowrap border border-l-0 border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
-                                        >
-                                            Fecha
-                                        </td>
-                                        <td
-                                            class="whitespace-nowrap border border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
-                                        >
-                                            Valor
-                                        </td>
-                                        <td
-                                            class="whitespace-nowrap border border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
-                                        >
-                                            Objetivo
-                                        </td>
-                                        <td
-                                            class="whitespace-nowrap border border-r-0 border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
-                                        >
-                                            <div class="flex justify-center space-x-reverse space-x-2">
-                                                <button onclick="$notification({ text: 'Item edit action', variant: 'info' })" class="btn h-8 w-8 p-0 text-error hover:bg-error/20 focus:bg-error/20 active:bg-error/25">
-                                                    <i class="fa fa-trash-alt"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>                                    
-                                </tbody>
+                                <table id="dataIndicatorTable" class="w-full text-left">
+                                    <thead>
+                                        <tr>
+                                            <th
+                                                class="whitespace-nowrap text-center border-t-0 border border-l-0 border-slate-200 dark:border-navy-500 bg-slate-200 px-2 py-2 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100"
+                                            >
+                                                Fecha
+                                            </th>
+                                            <th
+                                                class="whitespace-nowrap text-center border-t-0 border border-slate-200 dark:border-navy-500 bg-slate-200 px-2 py-2 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100"
+                                            >
+                                                Valor
+                                            </th>
+                                            <th
+                                                class="whitespace-nowrap text-center border-t-0 border border-slate-200 dark:border-navy-500 bg-slate-200 px-2 py-2 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100"
+                                            >
+                                                Objetivo
+                                            </th>
+                                            <th
+                                                class="whitespace-nowrap text-center border-t-0 border-x-0 border border-slate-200 dark:border-navy-500 bg-slate-200 px-2 py-2 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100"
+                                            >
+                                                Acciones
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="rounded-lg px-5 py-8 text-lg text-center" colspan="4">
+                                                Por favor, selecciona un intervalo de actualización para comenzar a añadir registros.
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -1119,12 +1097,14 @@
                                     class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90">
                                 <span>Cancelar</span>
                             </button>
-                            <button type="submit"
-                                    class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">
+                            <button 
+                                id="saveChangesButton"
+                                class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
+                            >
                                 <span>Guardar</span>
                             </button>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

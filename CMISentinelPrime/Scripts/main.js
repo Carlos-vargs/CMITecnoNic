@@ -17,17 +17,6 @@ import SimpleBar from "simplebar";
 import dayjs from "dayjs";
 
 /**
- * Code highlighting library
- * JUST FOR DEMO PURPOSE ONLY FOR HIGHLIGHTING CODE
- * IF YOU DON'T NEED THIS IN THE YOUR APPLICATION
- * REMOVE THIS CODE
- * @see https://highlightjs.org/
- */
-import hljs from "highlight.js/lib/core";
-import xml from "highlight.js/lib/languages/xml";
-import javascript from "highlight.js/lib/languages/javascript";
-
-/**
  *  Breakpont Service
  */
 import Breakpont from "./services/breakpoint";
@@ -84,16 +73,6 @@ import Drawer from "./components/drawer";
 import * as tooltip from "./components/tooltip";
 
 /**
- * Register HTML, XML, JS language for highlight.js
- * JUST FOR DEMO PURPOSE ONLY FOR HIGHLIGHTING CODE
- * IF YOU DON'T NEED THIS IN THE YOUR APPLICATION
- * REMOVE THIS CODE
- */
-hljs.registerLanguage("xml", xml);
-hljs.registerLanguage("javascript", javascript);
-hljs.configure({ ignoreUnescapedHTML: true });
-
-/**
  * Application Services
  */
 window.$breakpoint = new Breakpont();
@@ -108,7 +87,6 @@ window.Tab = Tab;
 window.Modal = Modal;
 window.Drawer = Drawer;
 
-window.hljs = hljs; // JUST FOR DEMO PURPOSE ONLY FOR HIGHLIGHTING CODE
 window.Accordion = Accordion;
 window.SimpleBar = SimpleBar;
 window.dayjs = dayjs;

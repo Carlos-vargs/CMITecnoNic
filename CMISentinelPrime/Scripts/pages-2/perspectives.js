@@ -117,7 +117,6 @@ const initializePerspectivesComponents = () => {
       formUnitMeasure.value = data?.Indicator?.UnitMeasure;
       formIndicatorDescription.value = data?.Indicator?.Description;
       formMetricId.value = data?.MetricType?.Id;
-      
     } catch (error) {
       console.error("Error loading perspective data", error);
     }
@@ -314,6 +313,196 @@ const initializeDropdownPoppers = (
   initPoppers();
 };
 
+function setupDateTableUpdater() {
+  const updateIntervalSelect = document.getElementById(
+    "measurementFrequencySelect"
+  );
+  const startDatePicker = document.getElementById("indicatorDatePicker");
+  const tableBody = document.querySelector("#dataIndicatorTable tbody");
+  const addButton = document.getElementById("addTableRow");
+
+  function adjustDateByInterval(date, interval) {
+    switch (interval) {
+      case "Diariamente":
+        date.setDate(date.getDate() + 1);
+        break;
+      case "Semanalmente":
+        date.setDate(date.getDate() + 7);
+        break;
+      case "Mensualmente":
+        date.setMonth(date.getMonth() + 1);
+        break;
+      case "Trimestralmente":
+        date.setMonth(date.getMonth() + 3);
+        break;
+      case "Semestralmente":
+        date.setMonth(date.getMonth() + 6);
+        break;
+      case "Anualmente":
+        date.setFullYear(date.getFullYear() + 1);
+        break;
+    }
+  }
+
+  function generateDates(startDate, interval) {
+    if (["Nunca"].includes(interval)) {
+      return [];
+    }
+
+    const dates = [];
+    let currentDate = startDate ? new Date(startDate) : new Date();
+    if (isNaN(currentDate.getTime())) {
+      currentDate = new Date();
+    }
+
+    if (interval === "Una vez") {
+      dates.push(new Date(currentDate));
+      return dates;
+    }
+
+    adjustDateByInterval(currentDate, interval);
+
+    for (let i = 0; i < 12; i++) {
+      dates.push(new Date(currentDate));
+      adjustDateByInterval(currentDate, interval);
+    }
+    return dates;
+  }
+
+  function updateTable() {
+    const interval = updateIntervalSelect.value;
+    const startDate = startDatePicker.value;
+    const dates = generateDates(startDate, interval);
+
+    tableBody.innerHTML = "";
+
+    dates.forEach((date) => {
+      const row = `
+      <tr>
+        <td
+        class="whitespace-nowrap border border-l-0 border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
+        >
+          ${date.toLocaleDateString()}
+        </td>
+        <td
+            class="whitespace-nowrap border border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
+        >
+          <label class="block">
+            <input
+              class="form-input w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+              placeholder="Ingrese el Valor"
+              value="Valor"
+              type="number"
+              min="0"
+            />
+          </label>
+        </td>
+        <td
+            class="whitespace-nowrap border border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
+        >
+          <label class="block">
+            <input
+              class="form-input w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+              placeholder="Ingrese el objetivo"
+              value="Objetivo"
+              type="number"
+              min="0"
+            />
+          </label>
+        </td>
+        <td
+            class="whitespace-nowrap border border-r-0 border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
+        >
+          <div class="flex justify-center space-x-reverse space-x-2">
+            <button onclick="removeRow(this)" class="btn h-8 w-8 p-0 text-error hover:bg-error/20 focus:bg-error/20 active:bg-error/25">
+              <i class="fa fa-trash-alt"></i>
+            </button>
+          </div>
+        </td>
+      </tr>`;
+      tableBody.innerHTML += row;
+    });
+  }
+
+  function addTableRow() {
+    const lastDateCell = tableBody.querySelector(
+      "tr:last-child td:first-child"
+    );
+    let lastDate = lastDateCell
+      ? new Date(lastDateCell.textContent)
+      : new Date(startDatePicker.value || new Date());
+    adjustDateByInterval(lastDate, updateIntervalSelect.value);
+
+    const row = `
+      <tr>
+        <td
+        class="whitespace-nowrap border border-l-0 border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
+        >
+          ${lastDate.toLocaleDateString()}
+        </td>
+        <td
+            class="whitespace-nowrap border border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
+        >
+          <label class="block">
+            <input
+              class="form-input w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+              placeholder="Ingrese el Valor"
+              value="Valor"
+              type="number"
+            />
+          </label>
+        </td>
+        <td
+            class="whitespace-nowrap border border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
+        >
+          <label class="block">
+            <input
+              class="form-input w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+              placeholder="Ingrese el objetivo"
+              value="Objetivo"
+              type="number"
+            />
+          </label>
+        </td>
+        <td
+            class="whitespace-nowrap border border-r-0 border-slate-200 px-1.5 py-1.5 text-center dark:border-navy-500"
+        >
+          <div class="flex justify-center space-x-reverse space-x-2">
+            <button onclick="removeRow(this)" class="btn h-8 w-8 p-0 text-error hover:bg-error/20 focus:bg-error/20 active:bg-error/25">
+              <i class="fa fa-trash-alt"></i>
+            </button>
+          </div>
+        </td>
+      </tr>`;
+    tableBody.innerHTML += row;
+  }
+
+  window.removeRow = function (button) {
+    const row = button.closest("tr");
+    row.parentNode.removeChild(row);
+
+    $notification({ text: "Registro Eliminado", variant: "success" });
+  };
+
+  async function sendUpdatedData() {
+    const updatedData = Array.from(tableBody.querySelectorAll("tr")).map(
+      (row) => ({
+        date: row.cells[0].innerText,
+        value: row.cells[1].querySelector("input").value,
+        objective: row.cells[2].querySelector("input").value,
+      })
+    );
+    console.log({ updatedData });
+  }
+
+  updateIntervalSelect.addEventListener("change", updateTable);
+  startDatePicker.addEventListener("change", updateTable);
+  addButton.addEventListener("click", addTableRow);
+  document
+    .getElementById("saveChangesButton")
+    .addEventListener("click", sendUpdatedData);
+}
+
 window.addEventListener("app:mounted", initializePerspectivesComponents, {
   once: true,
 });
@@ -329,3 +518,5 @@ document.addEventListener("DOMContentLoaded", function () {
     "table-collapse-indicator"
   );
 });
+
+document.addEventListener("DOMContentLoaded", setupDateTableUpdater);
