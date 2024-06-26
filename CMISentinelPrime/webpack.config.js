@@ -1,17 +1,18 @@
 const path = require("path");
 const glob = require("glob");
 
-// pages-2 es solamente de prueba gradualmente se eliminara 
-// y quedara dentro de pages 
+// pages-2 es solamente de prueba gradualmente se eliminara
+// y quedara dentro de pages
 module.exports = {
   mode: "development", // Cambiar a 'production' ahorita no si
   entry: {
-      app: "./Scripts/app.js",
-      components: ["./Scripts/libs/components.js", "./Scripts/libs/forms.js"],
-      pages: glob.sync("./Scripts/pages/**/*.js"),
-      cmi: "./Scripts/pages-2/cmi.js",
-      perspectives: "./Scripts/pages-2/perspectives.js",
-    },
+    app: "./Scripts/app.js",
+    components: ["./Scripts/libs/components.js", "./Scripts/libs/forms.js"],
+    pages: glob.sync("./Scripts/pages/**/*.js"),
+    cmi: "./Scripts/pages-2/cmi.js",
+    perspectives: "./Scripts/pages-2/perspectives.js",
+    dashboardsHome: "./Scripts/pages-2/dashboards-home.js",
+  },
   output: {
     filename: "[name].bundle.js", // Nombre dinámico basado en la entrada
     path: path.resolve(__dirname, "Scripts/dist"),

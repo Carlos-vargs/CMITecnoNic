@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
+    <title>@ViewBag.Title - BSC Nica Disigner </title>
     <link rel="stylesheet" href="/Content/output.css">
     <link rel="stylesheet" href="/Content/template.css">
 
@@ -32,6 +32,7 @@
         localStorage.getItem("dark-mode") === "dark" &&
             document.documentElement.classList.add("dark");
     </script>
+    @RenderSection("ScriptsHeader", required: false)
 </head>
 
 <body class="is-header-blur">
