@@ -21,6 +21,13 @@ import ApexCharts from "apexcharts";
  * @see https://www.highcharts.com/
  */
 import Highcharts from "highcharts";
+import more from "highcharts/highcharts-more";
+import Histogram from "highcharts/modules/histogram-bellcurve";
+import highcharts3D from "highcharts/highcharts-3d";
+
+more(Highcharts);
+Histogram(Highcharts);
+highcharts3D(Highcharts);
 
 /**
  * Tables Libraries
